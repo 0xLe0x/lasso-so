@@ -5,6 +5,8 @@ import Signin from "./pages/Signin.vue";
 import Signup from "./pages/Signup.vue";
 import ResetPassword from "./pages/ResetPassword.vue";
 
+import URQL from "./pages/URQL.vue";
+
 const routerHistory = createWebHistory();
 
 const router = createRouter({
@@ -13,6 +15,10 @@ const router = createRouter({
     {
       path: "/",
       component: Dashboard,
+    },
+    {
+      path: "/test",
+      component: URQL,
     },
     {
       path: "/signin",
