@@ -16,7 +16,8 @@
     "moment": "^2.29.4",
     "vue": "^3.2.20",
     "vue-flatpickr-component": "^9.0.6",
-    "vue-router": "^4.1.2"
+    "vue-router": "^4.1.2",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.0",

@@ -34,22 +34,22 @@
           <div class="max-w-sm mx-auto px-4 py-8">
             <h1 class="text-3xl text-slate-800 font-bold mb-6">Welcome back! ✨</h1>
             <!-- Form -->
-            <form>
+            <form @submit.prevent="signin">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium mb-1" for="email">Email Address</label>
-                  <input id="email" class="form-input w-full" type="email" />
+                  <input required id="email" v-model="email" class="form-input w-full" type="email" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium mb-1" for="password">Password</label>
-                  <input id="password" class="form-input w-full" type="password" autoComplete="on" />
+                  <input required id="password" v-model="password" class="form-input w-full" type="password" autoComplete="on" />
                 </div>
               </div>
               <div class="flex items-center justify-between mt-6">
                 <div class="mr-1">
                   <router-link class="text-sm underline hover:no-underline" to="/reset-password">Forgot Password?</router-link>
                 </div>
-                <router-link class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/">Sign In</router-link>
+                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/">Sign In</button>
               </div>
             </form>
             <!-- Footer -->
@@ -86,8 +86,37 @@
 </template>
 
 <script>
+import { useMutation } from '@urql/vue'
+import { ref } from 'vue'
 
 export default {
   name: 'Signin',
+  setup() {
+    const password = ref('')
+    const email = ref('')
+    const getToken = useMutation(`
+      mutation ($password: String!, $email: String!) { 
+        tokenAuth(password: $password, email: $email) {
+          success
+          errors
+          user {
+            id
+            email
+          }
+          token
+        }
+      }
+    `);
+    
+    return {
+      password,
+      email,
+      signin() {
+        getToken.executeMutation({ password: password.value.toString(), email: email.value.toString() }).then(result => {
+          console.log(result);
+        });
+      }
+    };
+  },
 }
 </script>
