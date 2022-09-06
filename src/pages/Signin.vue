@@ -86,28 +86,30 @@
 </template>
 
 <script>
-import { useMutation } from '@urql/vue'
+import { useMutation, gql } from '@urql/vue'
 import { ref } from 'vue'
 import router from '../router'
+
+const SIGNIN = gql`
+  mutation ($password: String!, $email: String!) { 
+    tokenAuth(password: $password, email: $email) {
+      success
+      errors
+      user {
+        id
+        email
+      }
+      token
+    }
+  }
+`
 
 export default {
   name: 'Signin',
   setup() {
     const password = ref('')
     const email = ref('')
-    const getToken = useMutation(`
-      mutation ($password: String!, $email: String!) { 
-        tokenAuth(password: $password, email: $email) {
-          success
-          errors
-          user {
-            id
-            email
-          }
-          token
-        }
-      }
-    `);
+    const getToken = useMutation(SIGNIN);
     
     return {
       password,
@@ -115,7 +117,7 @@ export default {
       signin() {
         getToken.executeMutation({ password: password.value.toString(), email: email.value.toString() }).then(result => {
           if (result.data.tokenAuth.success) {
-            localStorage.setItem('token', result.data.tokenAuth.token)
+            localStorage.setItem('user-token', result.data.tokenAuth.token)
             router.push('/')
           }
           // TODO: handle errors
