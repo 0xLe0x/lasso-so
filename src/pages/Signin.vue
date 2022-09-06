@@ -88,6 +88,7 @@
 <script>
 import { useMutation } from '@urql/vue'
 import { ref } from 'vue'
+import router from '../router'
 
 export default {
   name: 'Signin',
@@ -113,7 +114,7 @@ export default {
       email,
       signin() {
         getToken.executeMutation({ password: password.value.toString(), email: email.value.toString() }).then(result => {
-          console.log(result);
+          router.push('/');
         });
       }
     };
