@@ -114,7 +114,11 @@ export default {
       email,
       signin() {
         getToken.executeMutation({ password: password.value.toString(), email: email.value.toString() }).then(result => {
-          router.push('/');
+          if (result.data.tokenAuth.success) {
+            localStorage.setItem('token', result.data.tokenAuth.token)
+            router.push('/')
+          }
+          // TODO: handle errors
         });
       }
     };
