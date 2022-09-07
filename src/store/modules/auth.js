@@ -1,8 +1,28 @@
+import { gql } from '@urql/vue'
+import client from '../../client';
+
 export const AUTH_REQUEST = "AUTH_REQUEST";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_ERROR = "AUTH_ERROR";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
 export const USER_TOKEN = "USER_TOKEN";
+export const USER_REQUEST = "USER_REQUEST";
+export const USER_SUCCESS = "USER_SUCCESS";
+export const USER_ERROR = "USER_ERROR";
+
+const SIGNIN = gql`
+  mutation ($password: String!, $email: String!) { 
+    tokenAuth(password: $password, email: $email) {
+      success
+      errors
+      user {
+        id
+        email
+      }
+      token
+    }
+  }
+`
 
 const state = {
   token: localStorage.getItem("user-token") || "",
@@ -37,12 +57,19 @@ const actions = {
   [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       commit(AUTH_REQUEST);
-      apiCall({ url: "auth", data: user, method: "POST" })
-        .then(resp => {
-          localStorage.setItem("user-token", resp.token);
-          commit(AUTH_SUCCESS, resp);
-          dispatch(USER_REQUEST);
-          resolve(resp);
+      client.mutation(SIGNIN,
+        { 
+          password: user.password, 
+          email: user.email 
+        })
+        .toPromise()
+        .then(result => {
+          if (result.data.tokenAuth.success) {
+            localStorage.setItem('user-token', result.data.tokenAuth.token)
+            commit(AUTH_SUCCESS, result);
+            dispatch(USER_REQUEST);
+            resolve(result);
+          }
         })
         .catch(err => {
           commit(AUTH_ERROR, err);
