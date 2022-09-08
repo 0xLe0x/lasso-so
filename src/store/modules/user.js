@@ -1,6 +1,6 @@
 import { gql } from '@urql/vue'
 import client from '../../client';
-import { USER_REQUEST, USER_ERROR, USER_SUCCESS } from '../actions/user';
+import { USER_CREATE, USER_VERIFY, USER_REQUEST, USER_ERROR, USER_SUCCESS } from '../actions/user';
 import { AUTH_LOGOUT } from "../actions/auth";
 
 const WHOAMI = gql`
@@ -8,6 +8,33 @@ const WHOAMI = gql`
     user (id: $user_id){
       username,
       verified
+    }
+  }
+`
+
+const CREATE_USER = gql` 
+  mutation ($email: String!, $username: String!, $password: String!) {
+    register(
+      email: $email,
+      username: $username,
+      password1: $password,
+      password2: $password
+    ) {
+      success,
+      errors,
+      token,
+      refreshToken
+    }
+  }
+`
+
+const VERIFY_USER = gql` 
+  mutation ($verification_token: String!) {
+    verifyAccount(
+      token: $verification_token,
+    ) {
+      success, 
+      errors
     }
   }
 `
@@ -29,9 +56,30 @@ const actions = {
       })
       .catch(() => {
         commit(USER_ERROR);
-        // if resp is unauthorized, logout, to
         dispatch(AUTH_LOGOUT);
       });
+  },
+  [USER_CREATE]: ({ commit, dispatch }, user) => {
+    commit(USER_REQUEST);
+    console.log(user);
+    client.mutation(CREATE_USER, { 
+        email: user.email, 
+        username: user.username,
+        password: user.password,
+      })
+      .toPromise()
+      .then(resp => {
+        commit(USER_SUCCESS, user);
+        dispatch(AUTH_LOGIN, user);
+    })      
+    .catch(() => {
+      commit(USER_ERROR);
+      dispatch(AUTH_LOGOUT);
+    });
+  },
+  [USER_VERIFY]: ({ commit, dispatch }, verification_token) => {
+    client.mutation(VERIFY_USER, { verification_token })
+      .toPromise().then(resp => {console.log(resp)}).catch(() => {});
   }
 };
 

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "./store/index";
+import Activate from "./pages/Activate.vue";
 import Dashboard from "./pages/Dashboard.vue";
 import PageNotFound from "./pages/utility/PageNotFound.vue";
 import Signin from "./pages/Signin.vue";
@@ -31,6 +32,10 @@ const router = createRouter({
       path: "/",
       component: Dashboard,
       beforeEnter: ifAuthenticated,
+    },
+    {
+      path: "/activate/:verification_token",
+      component: Activate,
     },
     {
       path: "/signin",
