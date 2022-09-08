@@ -1,4 +1,5 @@
 import { createClient, dedupExchange, cacheExchange, fetchExchange, gql } from '@urql/vue';
+import { makeOperation } from '@urql/core';
 import { authExchange } from '@urql/exchange-auth';
 import store from './store/index';
 import router from './router';
@@ -63,6 +64,19 @@ const getAuth = async ({ authState, mutate }) => {
   return null;
 };
 
+const willAuthError = ({ authState }) => {
+  if (!authState) return true;
+  // e.g. check for expiration, existence of auth etc
+  return false;
+}
+
+const didAuthError = ({ error }) => {
+  // check if the error was an auth error (this can be implemented in various ways, e.g. 401 or a special error code)
+  return error.graphQLErrors.some(
+    e => e.extensions?.code === 'FORBIDDEN',
+  );
+}
+
 const addAuthToOperation = ({ authState, operation }) => {
   // the token isn't in the auth state, return the operation without changes
   if (!authState || !authState.token) {
@@ -75,9 +89,10 @@ const addAuthToOperation = ({ authState, operation }) => {
       ? operation.context.fetchOptions()
       : operation.context.fetchOptions || {};
 
-  return {
-    ...operation,
-    context: {
+  return makeOperation(
+    operation.kind,
+    operation,
+    {
       ...operation.context,
       fetchOptions: {
         ...fetchOptions,
@@ -87,7 +102,7 @@ const addAuthToOperation = ({ authState, operation }) => {
         },
       },
     },
-  };
+  );
 }
 
 const client = createClient({
@@ -96,8 +111,10 @@ const client = createClient({
     dedupExchange,
     cacheExchange,
     authExchange({
-      getAuth,
       addAuthToOperation,
+      didAuthError,
+      getAuth,
+      willAuthError,
     }),
     fetchExchange,
   ]

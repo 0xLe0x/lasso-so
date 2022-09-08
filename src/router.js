@@ -50,6 +50,7 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       component: PageNotFound,
+      beforeEnter: ifAuthenticated,
     },
   ],
 });
