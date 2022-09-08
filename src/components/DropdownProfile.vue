@@ -94,7 +94,6 @@ export default {
   },
   methods: {
     signout: function() {
-      console.log("signing out")
       this.$store.dispatch(AUTH_LOGOUT).then(() => {
         this.$router.push('/signin')
       })
