@@ -9,7 +9,6 @@ import ResetPassword from "./pages/ResetPassword.vue";
 const routerHistory = createWebHistory();
 
 const ifNotAuthenticated = (to, from, next) => {
-  console.log("Authenticated: ", store.getters.isAuthenticated)
   if (!store.getters.isAuthenticated) {
     next()
     return
@@ -18,7 +17,6 @@ const ifNotAuthenticated = (to, from, next) => {
 }
 
 const ifAuthenticated = (to, from, next) => {
-  console.log("Authenticated: ", store.getters.isAuthenticated)
   if (store.getters.isAuthenticated) {
     next()
     return

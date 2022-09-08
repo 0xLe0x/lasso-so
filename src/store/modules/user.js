@@ -25,7 +25,6 @@ const actions = {
     client.query(WHOAMI, { user_id: user.id })
       .toPromise()
       .then(resp => {
-        console.log("whoami: ", resp);
         commit(USER_SUCCESS, resp.data.user);
       })
       .catch(() => {

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.2",
+    "@urql/exchange-auth": "^1.0.0",
     "@urql/vue": "^1.0.2",
     "chart.js": "^3.8.0",
     "chartjs-adapter-moment": "^1.0.0",
