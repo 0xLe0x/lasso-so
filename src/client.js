@@ -3,6 +3,7 @@ import { authExchange } from '@urql/exchange-auth';
 import store from './store/index';
 import router from './router';
 import { AUTH_LOGOUT } from './store/actions/auth';
+import { USER_AUTH_TOKEN, USER_AUTH_REFRESH_TOKEN } from './store/modules/auth';
 
 
 const REFRESH_USER_TOKEN = gql`
@@ -27,8 +28,8 @@ const signout = () => {
 
 const getAuth = async ({ authState, mutate }) => {
   if (!authState) {
-    const token = localStorage.getItem('user-token');
-    const refreshToken = localStorage.getItem('user-refresh-token');
+    const token = localStorage.getItem(USER_AUTH_TOKEN);
+    const refreshToken = localStorage.getItem(USER_AUTH_REFRESH_TOKEN);
     if (token && refreshToken) {
       return { token, refreshToken };
     }
@@ -45,8 +46,8 @@ const getAuth = async ({ authState, mutate }) => {
 
   if (result.data?.refreshToken.success) {
     // save the new tokens in storage for next restart
-    localStorage.setItem('user-token', result.data.refreshToken.token);
-    localStorage.setItem('user-refresh-token', result.data.refreshToken.refreshToken);
+    localStorage.setItem(USER_AUTH_TOKEN, result.data.refreshToken.token);
+    localStorage.setItem(USER_AUTH_REFRESH_TOKEN, result.data.refreshToken.refreshToken);
 
     // return the new tokens
     return {
