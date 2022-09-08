@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { AUTH_REQUEST } from '../store/modules/auth'
+import { AUTH_REQUEST } from '../store/actions/auth'
 
 
 export default {

@@ -1,14 +1,7 @@
 import { gql } from '@urql/vue'
 import client from '../../client';
-
-export const AUTH_REQUEST = "AUTH_REQUEST";
-export const AUTH_SUCCESS = "AUTH_SUCCESS";
-export const AUTH_ERROR = "AUTH_ERROR";
-export const AUTH_LOGOUT = "AUTH_LOGOUT";
-export const USER_TOKEN = "USER_TOKEN";
-export const USER_REQUEST = "USER_REQUEST";
-export const USER_SUCCESS = "USER_SUCCESS";
-export const USER_ERROR = "USER_ERROR";
+import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from "../actions/auth";
+import { USER_REQUEST } from "../actions/user";
 
 const SIGNIN = gql`
   mutation ($password: String!, $email: String!) { 
@@ -32,16 +25,17 @@ const state = {
 
 const getters = {
   isAuthenticated: state => !!state.token,
-  authStatus: state => state.status
+  authStatus: state => state.status,
+  authToken: state => state.token
 };
 
 const mutations = {
   [AUTH_REQUEST]: state => {
     state.status = "loading";
   },
-  [AUTH_SUCCESS]: (state, resp) => {
+  [AUTH_SUCCESS]: (state, token) => {
     state.status = "success";
-    state.token = resp.token;
+    state.token = token;
     state.hasLoadedOnce = true;
   },
   [AUTH_ERROR]: state => {
@@ -66,8 +60,8 @@ const actions = {
         .then(result => {
           if (result.data.tokenAuth.success) {
             localStorage.setItem('user-token', result.data.tokenAuth.token)
-            commit(AUTH_SUCCESS, result);
-            dispatch(USER_REQUEST);
+            commit(AUTH_SUCCESS, result.data.tokenAuth.token);
+            dispatch(USER_REQUEST, result.data.tokenAuth.user);
             resolve(result);
           }
         })

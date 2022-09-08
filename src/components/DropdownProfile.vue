@@ -37,7 +37,7 @@
             <router-link class="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3" to="/settings/account" @click="dropdownOpen = false">Settings</router-link>
           </li>
           <li>
-            <router-link class="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3" to="/signin" @click="dropdownOpen = false">Sign Out</router-link>
+            <button class="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3" @click="signout">Sign Out</button>
           </li>
         </ul>
       </div> 
@@ -47,6 +47,7 @@
 
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { AUTH_LOGOUT } from '../store/actions/auth'
 import UserAvatar from '../images/user-avatar-32.png'
 
 export default {
@@ -90,6 +91,14 @@ export default {
       trigger,
       dropdown,
     }
-  }
+  },
+  methods: {
+    signout: function() {
+      console.log("signing out")
+      this.$store.dispatch(AUTH_LOGOUT).then(() => {
+        this.$router.push('/signin')
+      })
+    },
+  },
 }
 </script>
