@@ -6,6 +6,7 @@ import PageNotFound from "./pages/utility/PageNotFound.vue";
 import Signin from "./pages/Signin.vue";
 import Signup from "./pages/Signup.vue";
 import ResetPassword from "./pages/ResetPassword.vue";
+import RequestResetPassword from "./pages/RequestResetPassword.vue";
 
 const routerHistory = createWebHistory();
 
@@ -48,9 +49,12 @@ const router = createRouter({
       beforeEnter: ifNotAuthenticated,
     },
     {
-      path: "/reset-password",
+      path: "/reset-password/:reset_token",
       component: ResetPassword,
-      beforeEnter: ifAuthenticated,
+    },
+    {
+      path: "/reset-password",
+      component: RequestResetPassword,
     },
     {
       path: "/:pathMatch(.*)*",

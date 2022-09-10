@@ -32,32 +32,21 @@
           </div>          
 
           <div class="max-w-sm mx-auto px-4 py-8">
-            <h1 class="text-3xl text-slate-800 font-bold mb-6">Create your Account ✨</h1>
+            <h1 class="text-3xl text-slate-800 font-bold mb-6">Reset your Password ✨</h1>
             <!-- Form -->
-            <form @submit.prevent="signup">
+            <form @submit.prevent="requestResetPassword">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium mb-1" for="email">Email Address <span class="text-rose-500">*</span></label>
                   <input required id="email" v-model="email" class="form-input w-full" type="email" />
                 </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1" for="username">User Name <span class="text-rose-500">*</span></label>
-                  <input required id="username" v-model="username" class="form-input w-full" type="text" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1" for="password">Password</label>
-                  <input required id="password" v-model="password" class="form-input w-full" type="password" autoComplete="on" />
-                </div>
-                <div class="flex items-center justify-between mt-6">
-                  <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/">Sign Up</button>
-                </div>
+              </div>
+              <div class="flex justify-end mt-6">
+                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Send Reset Link</button>
               </div>
             </form>
             <!-- Footer -->
             <div class="pt-5 mt-6 border-t border-slate-200">
-              <div class="text-sm">
-                Already have an account? <router-link class="font-medium text-indigo-500 hover:text-indigo-600" to="/signin">Sign In</router-link>
-              </div>
               <!-- Success Msg -->
               <div class="mt-5" v-show="formSubmitted">
                 <div class="bg-emerald-100 text-emerald-600 px-3 py-2 rounded">
@@ -65,7 +54,7 @@
                     <path d="M10.28 1.28L3.989 7.575 1.695 5.28A1 1 0 00.28 6.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 1.28z" />
                   </svg>
                   <span class="text-sm">
-                    Account verification email sent! Please check your inbox.
+                    Password reset email sent! Please check your inbox.
                   </span>
                 </div>
               </div>
@@ -87,26 +76,23 @@
 </template>
 
 <script>
-import { USER_CREATE } from '../store/actions/user'
-
+import { USER_SEND_RESET_PASSWORD_EMAIL } from '../store/actions/user';
 
 export default {
-  name: 'Signup',
+  name: 'RequestResetPassword',
   data() {
     return {
       email: '',
-      username: '',
-      password: '',
       formSubmitted: false,
     }
   },
   methods: {
-    signup() {
-      const { email, username, password } = this
-      this.$store.dispatch(USER_CREATE, { email, username, password }).then(resp => {
-        this.formSubmitted = true
-      }, error => {})
-    }
+    requestResetPassword() {
+      this.$store.dispatch(USER_SEND_RESET_PASSWORD_EMAIL, this.email)
+        .then(resp => {
+          this.formSubmitted = true;
+        }).catch(() => {});
+    },
   },
 }
 </script>

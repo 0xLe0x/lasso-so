@@ -1,6 +1,10 @@
 import { gql } from '@urql/vue'
 import client from '../../client';
-import { USER_CREATE, USER_VERIFY, USER_REQUEST, USER_ERROR, USER_SUCCESS } from '../actions/user';
+import { 
+  USER_CREATE, USER_VERIFY, USER_REQUEST, 
+  USER_ERROR, USER_SUCCESS, USER_RESET_PASSWORD,
+  USER_SEND_RESET_PASSWORD_EMAIL,
+} from '../actions/user';
 import { AUTH_LOGOUT } from "../actions/auth";
 
 const WHOAMI = gql`
@@ -39,6 +43,30 @@ const VERIFY_USER = gql`
   }
 `
 
+const SEND_RESET_PASSWORD_EMAIL = gql`
+  mutation ($email: String!) {
+    sendPasswordResetEmail(
+      email: $email
+    ) {
+      success,
+      errors
+    }
+  }
+`
+
+const RESET_PASSWORD = gql`
+  mutation ($reset_token: String!, $password: String!) {
+    passwordReset(
+      token: $reset_token,
+      newPassword1: $password,
+      newPassword2: $password
+    ) {
+      success,
+      errors
+    }
+  }
+`
+
 const state = { status: "", profile: {} };
 
 const getters = {
@@ -61,7 +89,6 @@ const actions = {
   },
   [USER_CREATE]: ({ commit, dispatch }, user) => {
     commit(USER_REQUEST);
-    console.log(user);
     client.mutation(CREATE_USER, { 
         email: user.email, 
         username: user.username,
@@ -79,8 +106,19 @@ const actions = {
   },
   [USER_VERIFY]: ({ commit, dispatch }, verification_token) => {
     client.mutation(VERIFY_USER, { verification_token })
-      .toPromise().then(resp => {console.log(resp)}).catch(() => {});
-  }
+      .toPromise().then(resp => {}).catch(() => {});
+  },
+  [USER_SEND_RESET_PASSWORD_EMAIL]: ({ commit, dispatch }, email) => {
+    client.mutation(SEND_RESET_PASSWORD_EMAIL, { email })
+      .toPromise().then(resp => {}).catch(() => {});
+  },
+  [USER_RESET_PASSWORD]: ({ commit, dispatch }, request) => {
+    client.mutation(RESET_PASSWORD, { 
+      reset_token: request.reset_token,
+      password: request.password,
+    })
+      .toPromise().then(resp => {}).catch(() => {});
+  },
 };
 
 const mutations = {

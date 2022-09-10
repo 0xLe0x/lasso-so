@@ -34,15 +34,15 @@
           <div class="max-w-sm mx-auto px-4 py-8">
             <h1 class="text-3xl text-slate-800 font-bold mb-6">Reset your Password ✨</h1>
             <!-- Form -->
-            <form>
+            <form @submit.prevent="resetPassword">
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium mb-1" for="email">Email Address <span class="text-rose-500">*</span></label>
-                  <input id="email" class="form-input w-full" type="email" />
+                  <label class="block text-sm font-medium mb-1" for="password">New Password <span class="text-rose-500">*</span></label>
+                  <input required id="password" v-model="password" class="form-input w-full" type="password" autoComplete="on" />
                 </div>
               </div>
               <div class="flex justify-end mt-6">
-                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Send Reset Link</button>
+                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Reset Password</button>
               </div>
             </form>
           </div>
@@ -62,8 +62,24 @@
 </template>
 
 <script>
+import { USER_RESET_PASSWORD } from '../store/actions/user';
 
 export default {
   name: 'ResetPassword',
+  data() {
+    return {
+      reset_token: null,
+      password: '',
+    };
+  },
+  methods: {
+    resetPassword() {
+      const reset_token = this.$route.params.reset_token;
+      const password = this.password;
+      this.$store.dispatch(USER_RESET_PASSWORD, { reset_token, password }).then(() => {
+        this.$router.push('/');
+      }, error => {});
+    },
+  },
 }
 </script>

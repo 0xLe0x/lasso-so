@@ -62,9 +62,7 @@ export default {
   mounted() {
     this.$store.dispatch(USER_VERIFY, this.$route.params.verification_token).then(() => {
       this.$router.push('/');
-    }, error => {
-      console.log('error: ', error);
-    });
+    }, error => {});
   },
 }
 </script>

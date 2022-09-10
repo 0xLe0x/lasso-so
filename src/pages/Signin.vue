@@ -34,7 +34,7 @@
           <div class="max-w-sm mx-auto px-4 py-8">
             <h1 class="text-3xl text-slate-800 font-bold mb-6">Welcome back! ✨</h1>
             <!-- Form -->
-            <form @submit.prevent="signin">
+            <form @submit.prevent="signIn">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium mb-1" for="email">Email Address</label>
@@ -98,7 +98,7 @@ export default {
     }
   },
   methods: {
-    signin() {
+    signIn() {
       const { password, email } = this
       this.$store.dispatch(AUTH_REQUEST, { password, email }).then(() => {
         this.$router.push('/')
