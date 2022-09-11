@@ -2,7 +2,7 @@
   "name": "mosaic-vue",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "serve": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },

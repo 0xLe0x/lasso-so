@@ -106,7 +106,7 @@ const addAuthToOperation = ({ authState, operation }) => {
 }
 
 const client = createClient({
-  url: 'https://local-api.topaly.xyz/', // TODO: change this to the production API URL
+  url: import.meta.env.VITE_API_BACKEND_URL,
   exchanges: [
     dedupExchange,
     cacheExchange,
