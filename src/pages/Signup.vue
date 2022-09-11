@@ -34,7 +34,7 @@
           <div class="max-w-sm mx-auto px-4 py-8">
             <h1 class="text-3xl text-slate-800 font-bold mb-6">Create your Account ✨</h1>
             <!-- Form -->
-            <form @submit.prevent="signup">
+            <form @submit.prevent="signUp">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium mb-1" for="email">Email Address <span class="text-rose-500">*</span></label>
@@ -96,7 +96,7 @@ export default {
     }
   },
   methods: {
-    signup() {
+    signUp() {
       const { email, username, password } = this
       this.$store.dispatch(USER_CREATE, { email, username, password }).then(resp => {
         if (this.$store.state.user.error) {

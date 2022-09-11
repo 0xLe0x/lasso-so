@@ -1,5 +1,5 @@
-import { gql } from '@urql/vue'
 import _ from 'lodash';
+import { gql } from '@urql/vue'
 import client from '../../client';
 import { 
   USER_CREATE, USER_VERIFY, USER_REQUEST, 
