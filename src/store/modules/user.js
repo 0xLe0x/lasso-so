@@ -5,7 +5,7 @@ import {
   USER_ERROR, USER_SUCCESS, USER_RESET_PASSWORD,
   USER_SEND_RESET_PASSWORD_EMAIL,
 } from '../actions/user';
-import { AUTH_LOGOUT } from "../actions/auth";
+import { AUTH_LOGOUT, AUTH_SUCCESS } from "../actions/auth";
 
 const WHOAMI = gql`
   query ($user_id: ID!) {
@@ -96,12 +96,10 @@ const actions = {
       })
       .toPromise()
       .then(resp => {
-        console.log(resp);
         commit(USER_SUCCESS, user);
-        dispatch(AUTH_LOGIN, user);
+        commit(AUTH_SUCCESS, user);
       })      
       .catch(err => {
-        console.log(err);
         commit(USER_ERROR);
         dispatch(AUTH_LOGOUT);
       });
