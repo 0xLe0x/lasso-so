@@ -1,11 +1,12 @@
 import { gql } from '@urql/vue'
+import _ from 'lodash';
 import client from '../../client';
 import { 
   USER_CREATE, USER_VERIFY, USER_REQUEST, 
   USER_ERROR, USER_SUCCESS, USER_RESET_PASSWORD,
   USER_SEND_RESET_PASSWORD_EMAIL,
 } from '../actions/user';
-import { AUTH_LOGOUT, AUTH_SUCCESS } from "../actions/auth";
+import { AUTH_ERROR, AUTH_LOGOUT, AUTH_SUCCESS } from "../actions/auth";
 
 const WHOAMI = gql`
   query ($user_id: ID!) {
@@ -67,7 +68,11 @@ const RESET_PASSWORD = gql`
   }
 `
 
-const state = { status: "", profile: {} };
+const state = { 
+  status: "", 
+  profile: {},
+  error: null 
+};
 
 const getters = {
   getProfile: state => state.profile,
@@ -89,18 +94,29 @@ const actions = {
   },
   [USER_CREATE]: ({ commit, dispatch }, user) => {
     commit(USER_REQUEST);
-    client.mutation(CREATE_USER, { 
+    return client.mutation(CREATE_USER, { 
         email: user.email, 
         username: user.username,
         password: user.password,
       })
       .toPromise()
       .then(resp => {
-        commit(USER_SUCCESS, user);
-        commit(AUTH_SUCCESS, user);
+        if (resp.data.register.success) {
+          commit(USER_SUCCESS, user);
+          commit(AUTH_SUCCESS, user);
+        } else {
+          const err_msgs = _.flow([
+            Object.entries,
+            arr => arr.filter(([key, value]) => ['email', 'username', 'password2'].indexOf(key) > -1),
+            Object.fromEntries,
+            Object.values
+          ])(resp.data.register.errors);
+          commit(USER_ERROR, err_msgs[0][0].message);
+        }
       })      
       .catch(err => {
-        commit(USER_ERROR);
+        commit(USER_ERROR, err);
+        commit(AUTH_ERROR, err);
         dispatch(AUTH_LOGOUT);
       });
   },
@@ -128,9 +144,11 @@ const mutations = {
   [USER_SUCCESS]: (state, user) => {
     state.status = "success";
     state.profile = user;
+    state.error = null;
   },
-  [USER_ERROR]: state => {
+  [USER_ERROR]: (state, error) => {
     state.status = "error";
+    state.error = error;
   },
   [AUTH_LOGOUT]: state => {
     state.profile = {};

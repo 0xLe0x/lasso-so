@@ -26,7 +26,8 @@ const state = {
   token: localStorage.getItem(USER_AUTH_TOKEN) || "",
   refreshToken: localStorage.getItem(USER_AUTH_REFRESH_TOKEN) || "",
   status: "",
-  hasLoadedOnce: false
+  hasLoadedOnce: false,
+  error: null
 };
 
 const getters = {
@@ -46,9 +47,10 @@ const mutations = {
     state.refreshToken = auth.refreshToken;
     state.hasLoadedOnce = true;
   },
-  [AUTH_ERROR]: state => {
+  [AUTH_ERROR]: (state, error) => {
     state.status = "error";
     state.hasLoadedOnce = true;
+    state.error = error;
   },
   [AUTH_LOGOUT]: state => {
     state.token = "";

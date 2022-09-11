@@ -58,17 +58,8 @@
               <div class="text-sm">
                 Already have an account? <router-link class="font-medium text-indigo-500 hover:text-indigo-600" to="/signin">Sign In</router-link>
               </div>
-              <!-- Success Msg -->
-              <div class="mt-5" v-show="formSubmitted">
-                <div class="bg-emerald-100 text-emerald-600 px-3 py-2 rounded">
-                  <svg class="inline w-3 h-3 shrink-0 fill-current mr-2" viewBox="0 0 12 12">
-                    <path d="M10.28 1.28L3.989 7.575 1.695 5.28A1 1 0 00.28 6.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 1.28z" />
-                  </svg>
-                  <span class="text-sm">
-                    Account verification email sent! Please check your inbox.
-                  </span>
-                </div>
-              </div>
+              <!-- Notification Msg -->
+              <NotificationBox v-if="notification" :message="notification" :is-error="error" />
             </div>
           </div>
 
@@ -87,24 +78,34 @@
 </template>
 
 <script>
+import NotificationBox from '../partials/utils/NotificationBox.vue'
 import { USER_CREATE } from '../store/actions/user'
-
 
 export default {
   name: 'Signup',
+  components: {
+    NotificationBox,
+  },
   data() {
     return {
       email: '',
       username: '',
       password: '',
-      formSubmitted: false,
+      notification: null,
+      error: null,
     }
   },
   methods: {
     signup() {
       const { email, username, password } = this
       this.$store.dispatch(USER_CREATE, { email, username, password }).then(resp => {
-        this.formSubmitted = true
+        if (this.$store.state.user.error) {
+          this.notification = this.$store.state.user.error
+          this.error = true
+        } else {
+          this.notification = 'Account verification email sent! Please check your inbox.'
+          this.error = false
+        }
       }, error => {})
     }
   },
