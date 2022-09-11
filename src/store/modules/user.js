@@ -96,13 +96,15 @@ const actions = {
       })
       .toPromise()
       .then(resp => {
+        console.log(resp);
         commit(USER_SUCCESS, user);
         dispatch(AUTH_LOGIN, user);
-    })      
-    .catch(() => {
-      commit(USER_ERROR);
-      dispatch(AUTH_LOGOUT);
-    });
+      })      
+      .catch(err => {
+        console.log(err);
+        commit(USER_ERROR);
+        dispatch(AUTH_LOGOUT);
+      });
   },
   [USER_VERIFY]: ({ commit, dispatch }, verification_token) => {
     client.mutation(VERIFY_USER, { verification_token })
