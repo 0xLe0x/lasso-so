@@ -88,7 +88,7 @@ const actions = {
         .catch(err => {
           commit(AUTH_ERROR, err);
           localStorage.removeItem(USER_AUTH_TOKEN);
-          reject(err);
+          console.log(err)
         });
   },
   [AUTH_LOGOUT]: ({ commit }) => {
