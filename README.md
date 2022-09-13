@@ -25,5 +25,15 @@ npm run lint
 npm run serve -- --mode dev
 ```
 
+### Run tests
+```
+npm run test
+```
+
+### Run tests with Vitest UI
+```
+npm run test -- --ui
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
