@@ -1,7 +1,12 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
+// https://vitest.dev/config/
+
+
 export default defineConfig({
   define: {
     "process.env": process.env,
@@ -21,6 +26,9 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    rollupOptions: {
+      external: new RegExp('^\/(?!src).*\/__tests__\/.*\.js$'),
+    },
   },
   server: {
     port: 8080,
@@ -33,5 +41,8 @@ export default defineConfig({
       // host: "localhost",
       path: "/ws",
     },
+  },
+  test: {
+
   },
 });
