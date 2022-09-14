@@ -4,6 +4,7 @@ node_modules
 
 # test generated
 coverage/*
+cypress/videos/*
 
 
 # local env files

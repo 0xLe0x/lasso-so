@@ -6,7 +6,6 @@ describe('My First Test', () => {
     cy.get('.action-email')
       .type('fake@email.com')
       .should('have.value', 'fake@email.com')
-    
   })
 })
 
