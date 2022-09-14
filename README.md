@@ -35,5 +35,13 @@ npm run test
 npm run test -- --ui
 ```
 
+## Run IT and component tests
+```
+npm run cy:run
+```
+```
+npm run cy:open
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
