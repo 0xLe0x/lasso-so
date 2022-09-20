@@ -16,7 +16,7 @@ Sentry.init({
   integrations: [
     new BrowserTracing({
       routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-      tracingOrigins: ["api.topaly.xyz", "local-api.topaly.xyz", /^\//],
+      tracingOrigins: ["api.lasso.so", "dev-api.lasso.so", "local-api.lasso.so", /^\//],
     }),
   ],
   tracesSampleRate: 1.0,
