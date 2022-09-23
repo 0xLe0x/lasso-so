@@ -72,11 +72,9 @@ export default{
   },
   methods: {
     addClient() {
-      console.log(this.clients);
       this.clients.push({
         url: this.text,
       })
-      console.log(this.clients);
     },
     removeClient(index) {
       console.log(index, this.clients);
