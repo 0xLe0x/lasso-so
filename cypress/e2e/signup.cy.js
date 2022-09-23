@@ -1,6 +1,6 @@
 describe('Signup', () => {
   it('clicking "type" navigates to a new url', () => {
-    cy.visit('https://app.topaly.xyz/signup')
+    cy.visit('https://app.lasso.so/signup')
     cy.get('input[id="email"]')
       .type('fake@email.com')
       .should('have.value', 'fake@email.com')
