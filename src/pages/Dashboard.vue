@@ -15,8 +15,7 @@
 
       <main>
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-          <!-- Welcome banner -->
-          <WelcomeBanner />
+          <ClientInputForm />
         </div>
       </main>
     </div>
@@ -25,16 +24,16 @@
 
 <script>
 import { ref } from "vue";
+import ClientInputForm from "../partials/dashboard/ClientInputForm.vue";
 import Sidebar from "../partials/Sidebar.vue";
 import Header from "../partials/Header.vue";
-import WelcomeBanner from "../partials/dashboard/WelcomeBanner.vue";
 
 export default {
   name: "Dashboard",
   components: {
+    ClientInputForm,
     Sidebar,
     Header,
-    WelcomeBanner,
   },
   setup() {
     const sidebarOpen = ref(false);

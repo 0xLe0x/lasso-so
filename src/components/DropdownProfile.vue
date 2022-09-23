@@ -9,7 +9,7 @@
     >
       <img class="w-8 h-8 rounded-full" :src="UserAvatar" width="32" height="32" alt="User" />
       <div class="flex items-center truncate">
-        <span class="truncate ml-2 text-sm font-medium group-hover:text-slate-800">Acme Inc.</span>
+        <span class="truncate ml-2 text-sm font-medium group-hover:text-slate-800"></span>
         <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
           <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
         </svg>
@@ -24,18 +24,11 @@
       leave-to-class="opacity-0"
     >
       <div v-show="dropdownOpen" class="origin-top-right z-10 absolute top-full min-w-44 bg-white border border-slate-200 py-1.5 rounded shadow-lg overflow-hidden mt-1" :class="align === 'right' ? 'right-0' : 'left-0'">
-        <div class="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
-          <div class="font-medium text-slate-800">Acme Inc.</div>
-          <div class="text-xs text-slate-500 italic">Administrator</div>
-        </div>
         <ul
           ref="dropdown"
           @focusin="dropdownOpen = true"
           @focusout="dropdownOpen = false"
         >
-          <li>
-            <router-link class="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3" to="/settings/account" @click="dropdownOpen = false">Settings</router-link>
-          </li>
           <li>
             <button class="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3" @click="signout">Sign Out</button>
           </li>
