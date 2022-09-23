@@ -77,9 +77,7 @@ export default{
       })
     },
     removeClient(index) {
-      console.log(index, this.clients);
       this.clients.splice(index, 1)
-      console.log(this.clients);
     },
     findCreators() {
       console.log('findCreators')
