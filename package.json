@@ -11,8 +11,8 @@
     "cy:open": "cypress open"
   },
   "dependencies": {
-    "@sentry/tracing": "^7.12.1",
-    "@sentry/vue": "^7.12.1",
+    "@sentry/tracing": "^7.14.0",
+    "@sentry/vue": "^7.14.0",
     "@tailwindcss/forms": "^0.5.2",
     "@urql/exchange-auth": "^1.0.0",
     "@urql/vue": "^1.0.2",
