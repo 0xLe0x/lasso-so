@@ -40,9 +40,18 @@
                   <label class="block text-sm font-medium mb-1" for="password">New Password <span class="text-rose-500">*</span></label>
                   <input required id="password" v-model="password" class="form-input w-full" type="password" autoComplete="on" />
                 </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1" for="password">Repeat New Password <span class="text-rose-500">*</span></label>
+                  <input required id="password_second_input" v-model="password_second_input" class="form-input w-full" type="password" autoComplete="on" />
+                </div>
               </div>
               <div class="flex justify-end mt-6">
                 <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white whitespace-nowrap">Reset Password</button>
+              </div>
+              <!-- Footer -->
+              <div class="pt-5 mt-6 border-t border-slate-200">
+                <!-- Notification Msg -->
+                <NotificationBox v-if="notification" :message="notification" :is-error="error" />
               </div>
             </form>
           </div>
@@ -62,18 +71,30 @@
 </template>
 
 <script>
+import NotificationBox from '../partials/utils/NotificationBox.vue'
 import { USER_RESET_PASSWORD } from '../store/actions/user';
 
 export default {
   name: 'ResetPassword',
+  components: {
+    NotificationBox,
+  },
   data() {
     return {
       reset_token: null,
       password: '',
+      password_second_input: '',
+      notification: null,
+      error: null,
     };
   },
   methods: {
     resetPassword() {
+      if (this.password !== this.password_second_input) {
+        this.notification = 'Passwords do not match',
+        this.error = true
+        return;
+      }
       const reset_token = this.$route.params.reset_token;
       const password = this.password;
       this.$store.dispatch(USER_RESET_PASSWORD, { reset_token, password }).then(() => {

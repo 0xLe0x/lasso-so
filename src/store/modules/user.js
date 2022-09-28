@@ -62,8 +62,7 @@ const RESET_PASSWORD = gql`
   mutation ($reset_token: String!, $password: String!) {
     passwordReset(
       token: $reset_token,
-      newPassword1: $password,
-      newPassword2: $password
+      newPassword: $password,
     ) {
       success,
       errors
