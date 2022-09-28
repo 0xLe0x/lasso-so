@@ -6,7 +6,7 @@ import {
   USER_ERROR, USER_SUCCESS, USER_RESET_PASSWORD,
   USER_SEND_RESET_PASSWORD_EMAIL,
 } from '../actions/user';
-import { AUTH_ERROR, AUTH_LOGOUT, AUTH_SUCCESS } from "../actions/auth";
+import { AUTH_ERROR, AUTH_LOGOUT, AUTH_REQUEST } from "../actions/auth";
 
 const WHOAMI = gql`
   query {
@@ -20,16 +20,18 @@ const WHOAMI = gql`
 
 const CREATE_USER = gql` 
   mutation ($email: String!, $username: String!, $password: String!) {
-    register(
+    createUser (
       email: $email,
       username: $username,
-      password1: $password,
-      password2: $password
+      password: $password,
     ) {
+      user {
+        username,
+        email,
+        isVerified
+      }
       success,
-      errors,
-      token,
-      refreshToken
+      errors
     }
   }
 `
@@ -86,7 +88,6 @@ const actions = {
     client.query(WHOAMI)
       .toPromise()
       .then(resp => {
-        console.log(resp);
         commit(USER_SUCCESS, resp.data.me);
       })
       .catch(() => {
@@ -103,17 +104,11 @@ const actions = {
       })
       .toPromise()
       .then(resp => {
-        if (resp.data.register.success) {
+        console.log(resp);
+        if (resp.data.createUser.success) {
           commit(USER_SUCCESS, user);
-          commit(AUTH_SUCCESS, user);
         } else {
-          const err_msgs = _.flow([
-            Object.entries,
-            arr => arr.filter(([key, value]) => ['email', 'username', 'password2'].indexOf(key) > -1),
-            Object.fromEntries,
-            Object.values
-          ])(resp.data.register.errors);
-          commit(USER_ERROR, err_msgs[0][0].message);
+          commit(USER_ERROR, resp.data.createUser.errors[0]);
         }
       })      
       .catch(err => {
