@@ -48,11 +48,19 @@
                   <label class="block text-sm font-medium mb-1" for="password">Password</label>
                   <input required id="password" v-model="password" class="form-input w-full" type="password" autoComplete="on" />
                 </div>
+                <!-- reCAPTCHA -->
+                <VueRecaptcha
+                  :sitekey="siteKey"
+                  @verify="handleRecaptchaSuccess"
+                  @error="handleRecaptchaError"
+                ></VueRecaptcha>
+
                 <div class="flex items-center justify-between mt-6">
                   <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/">Sign Up</button>
                 </div>
               </div>
             </form>
+
             <!-- Footer -->
             <div class="pt-5 mt-6 border-t border-slate-200">
               <div class="text-sm">
@@ -78,6 +86,7 @@
 </template>
 
 <script>
+import { VueRecaptcha } from 'vue-recaptcha';
 import NotificationBox from '../partials/utils/NotificationBox.vue'
 import { USER_CREATE } from '../store/actions/user'
 
@@ -85,6 +94,7 @@ export default {
   name: 'Signup',
   components: {
     NotificationBox,
+    VueRecaptcha,
   },
   data() {
     return {
@@ -93,10 +103,17 @@ export default {
       password: '',
       notification: null,
       error: null,
+      siteKey: import.meta.env.VITE_GCP_RECAPTCHA_KEY,
+      is_recaptcha_verified: false,
     }
   },
   methods: {
     signUp() {
+      if (!this.is_recaptcha_verified) {
+        this.notification = 'Please verify that you are not a robot.'
+        this.error = true
+        return
+      }
       const { email, username, password } = this
       this.$store.dispatch(USER_CREATE, { email, username, password }).then(resp => {
         if (this.$store.state.user.error) {
@@ -107,7 +124,14 @@ export default {
           this.error = false
         }
       }, error => {})
+    },
+    handleRecaptchaSuccess() {
+      this.is_recaptcha_verified = true
+    },
+    handleRecaptchaError() {
+      this.error = true
+      this.notification = 'Recaptcha verification failed. Please try again.'
     }
-  },
+  }
 }
 </script>
