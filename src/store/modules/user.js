@@ -9,10 +9,11 @@ import {
 import { AUTH_ERROR, AUTH_LOGOUT, AUTH_SUCCESS } from "../actions/auth";
 
 const WHOAMI = gql`
-  query ($user_id: ID!) {
-    user (id: $user_id){
+  query {
+    me {
       username,
-      verified
+      email,
+      isVerified
     }
   }
 `
@@ -76,16 +77,17 @@ const state = {
 
 const getters = {
   getProfile: state => state.profile,
-  isProfileLoaded: state => !!state.profile.name
+  isProfileLoaded: state => !!state.profile.username
 };
 
 const actions = {
-  [USER_REQUEST]: ({ commit, dispatch }, user) => {
+  [USER_REQUEST]: ({ commit, dispatch }) => {
     commit(USER_REQUEST);
-    client.query(WHOAMI, { user_id: user.id })
+    client.query(WHOAMI)
       .toPromise()
       .then(resp => {
-        commit(USER_SUCCESS, resp.data.user);
+        console.log(resp);
+        commit(USER_SUCCESS, resp.data.me);
       })
       .catch(() => {
         commit(USER_ERROR);
@@ -143,7 +145,7 @@ const mutations = {
   },
   [USER_SUCCESS]: (state, user) => {
     state.status = "success";
-    state.profile = user;
+    state.profile = { username: user.username, email: user.email, is_verified: user.isVerified };
     state.error = null;
   },
   [USER_ERROR]: (state, error) => {

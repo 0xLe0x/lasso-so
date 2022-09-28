@@ -8,15 +8,12 @@ import { USER_AUTH_TOKEN, USER_AUTH_REFRESH_TOKEN } from './store/modules/auth';
 
 
 const REFRESH_USER_TOKEN = gql`
-  mutation ($refresh_token: String!) {
-    refreshToken(
-      refreshToken: $refresh_token
-    ) {
-      success,
-      errors,
-      payload,
-      token,
+  mutation RefreshToken($refreshToken: String!) {
+    refreshToken(refreshToken: $refreshToken) {
+      token
+      payload
       refreshToken
+      refreshExpiresIn
     }
   }
 `

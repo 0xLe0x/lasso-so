@@ -8,17 +8,11 @@ export const USER_AUTH_TOKEN = "USER_AUTH_TOKEN"
 export const USER_AUTH_REFRESH_TOKEN = "USER_AUTH_REFRESH_TOKEN"
 
 const SIGNIN = gql`
-  mutation ($password: String!, $email: String!) { 
-    tokenAuth(password: $password, email: $email) {
-      success,
-      errors,
-      token,
-      refreshToken,
-      unarchiving,
-      user {
-        id,
-        username
-      }
+  mutation ($username: String!, $password: String!) {
+    tokenAuth (username: $username, password: $password) {
+      token
+      refreshToken
+      payload
     }
   }
 `
@@ -55,8 +49,10 @@ const mutations = {
     state.error = error;
   },
   [AUTH_LOGOUT]: state => {
+    state.status = "";
     state.token = "";
     state.refreshToken = "";
+    state.hasLoadedOnce = false;
   }
 };
 
@@ -66,29 +62,22 @@ const actions = {
       return client.mutation(SIGNIN,
         { 
           password: user.password, 
-          email: user.email 
+          username: user.username
         })
         .toPromise()
         .then(resp => {
-          if (resp.data.tokenAuth.success) {
+          if (resp.data.tokenAuth) {
             localStorage.setItem(USER_AUTH_TOKEN, resp.data.tokenAuth.token)
             localStorage.setItem(USER_AUTH_REFRESH_TOKEN, resp.data.tokenAuth.refreshToken)
             commit(AUTH_SUCCESS, resp.data.tokenAuth);
             dispatch(USER_REQUEST, resp.data.tokenAuth.user);
           } else {
-            const err_msgs = _.flow([
-              Object.entries,
-              arr => arr.filter(([key, value]) => ['nonFieldErrors'].indexOf(key) > -1),
-              Object.fromEntries,
-              Object.values
-            ])(resp.data.tokenAuth.errors);
-            commit(AUTH_ERROR, err_msgs[0][0].message);
+            commit(AUTH_ERROR, resp.error.graphQLErrors[0].message);
           }
         })
         .catch(err => {
           commit(AUTH_ERROR, err);
           localStorage.removeItem(USER_AUTH_TOKEN);
-          console.log(err)
         });
   },
   [AUTH_LOGOUT]: ({ commit }) => {

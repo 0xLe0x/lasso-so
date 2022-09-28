@@ -37,8 +37,8 @@
             <form @submit.prevent="signIn">
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium mb-1" for="email">Email Address</label>
-                  <input required id="email" v-model="email" class="form-input w-full" type="email" />
+                  <label class="block text-sm font-medium mb-1" for="username">Username</label>
+                  <input required id="username" v-model="username" class="form-input w-full" type="username" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium mb-1" for="password">Password</label>
@@ -88,7 +88,7 @@ export default {
   },
   data() {
     return {
-      email: '',
+      username: '',
       password: '',
       notification: null,
       error: null,
@@ -96,8 +96,8 @@ export default {
   },
   methods: {
     signIn() {
-      const { password, email } = this
-      this.$store.dispatch(AUTH_REQUEST, { password, email }).then(resp => {
+      const { password, username } = this
+      this.$store.dispatch(AUTH_REQUEST, { password, username }).then(resp => {
         if (this.$store.state.auth.error) {
           this.notification = this.$store.state.auth.error
           this.error = true
