@@ -38,10 +38,10 @@ const CREATE_USER = gql`
 
 const VERIFY_USER = gql` 
   mutation ($verification_token: String!) {
-    verifyAccount(
+    verifyUser(
       token: $verification_token,
     ) {
-      success, 
+      success,
       errors
     }
   }
@@ -104,7 +104,6 @@ const actions = {
       })
       .toPromise()
       .then(resp => {
-        console.log(resp);
         if (resp.data.createUser.success) {
           commit(USER_SUCCESS, user);
         } else {
@@ -118,8 +117,12 @@ const actions = {
       });
   },
   [USER_VERIFY]: ({ commit, dispatch }, verification_token) => {
-    client.mutation(VERIFY_USER, { verification_token })
-      .toPromise().then(resp => {}).catch(() => {});
+    return client.mutation(VERIFY_USER, { verification_token })
+      .toPromise().then(resp => {
+        if (resp.data.verifyUser.errors) {
+          commit(USER_ERROR, resp.data.verifyUser.errors[0]);
+        }
+      }).catch(() => {}); // TODO handle errors
   },
   [USER_SEND_RESET_PASSWORD_EMAIL]: ({ commit, dispatch }, email) => {
     client.mutation(SEND_RESET_PASSWORD_EMAIL, { email })

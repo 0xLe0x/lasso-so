@@ -32,7 +32,16 @@
           </div>          
 
           <div class="max-w-sm mx-auto px-4 py-8">
-            <h1 class="text-3xl text-slate-800 font-bold mb-6">Verifying ...</h1>
+            <h1 class="text-3xl text-slate-800 font-bold mb-6">Verify your account</h1>
+            <div class="flex items-center justify-between mt-6">
+              <button v-on:click="verify" class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3">Verify</button>
+            </div>
+
+            <!-- Footer -->
+            <div class="pt-4 mt-5 border-t border-slate-200">
+              <!-- Notification Msg -->
+              <NotificationBox v-if="notification" :message="notification" :is-error="error" />
+            </div>
           </div>
 
         </div>
@@ -50,19 +59,36 @@
 </template>
 
 <script>
+import NotificationBox from '../partials/utils/NotificationBox.vue'
 import { USER_VERIFY } from '../store/actions/user';
 
 export default {
   name: 'Activate',
+  components: {
+    NotificationBox,
+  },
   data() {
     return {
       verification_token: null,
+      notification: null,
+      error: null,
     };
   },
-  mounted() {
-    this.$store.dispatch(USER_VERIFY, this.$route.params.verification_token).then(() => {
-      this.$router.push('/');
-    }, error => {});
+  methods: {
+    loading() {
+      this.notification = this.notification
+    },
+    verify() {
+      this.$store.dispatch(USER_VERIFY, this.$route.params.verification_token).then(() => {
+        if (this.$store.state.user.error) {
+          this.notification = this.$store.state.user.error
+          this.error = true
+        } else {
+          this.error = false
+          this.$router.push('/')
+        }
+      }, error => {});
+    }
   },
 }
 </script>
