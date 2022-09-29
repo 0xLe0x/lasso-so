@@ -70,7 +70,7 @@ const actions = {
             localStorage.setItem(USER_AUTH_TOKEN, resp.data.tokenAuth.token)
             localStorage.setItem(USER_AUTH_REFRESH_TOKEN, resp.data.tokenAuth.refreshToken)
             commit(AUTH_SUCCESS, resp.data.tokenAuth);
-            dispatch(USER_REQUEST, resp.data.tokenAuth.user);
+            //dispatch(USER_REQUEST, resp.data.tokenAuth.user);
           } else {
             commit(AUTH_ERROR, resp.error.graphQLErrors[0].message);
           }
