@@ -95,6 +95,11 @@ export default{
         this.notification = 'Please remove some clients (max 10)';
         return;
       }
+      else if (!this.$store.state.user.profile.username) {
+        this.error = true;
+        this.notification = 'Please try logging again to continue';
+        return;
+      }
       else {
         const invalid_urls = this.clients.filter(item => isValidURL(item.url) === false);
         console.log("invalid urls: ", invalid_urls, this.clients);
@@ -106,16 +111,21 @@ export default{
         }
         else {
           console.log('Input urls ', this.clients.map(item => item.url));
-          this.$store.dispatch(TASK_REQUEST, this.clients.map(item => item.url)).then(() => {
-            if (this.$store.state.creatorFinder.error) {
-              console.log('Error: ', this.$store.state.creatorFinder.error);
-              this.error = true;
-              this.notification = this.$store.state.creatorFinder.error;
-            }
-            else if (this.$store.state.creatorFinder.status === "success") {
-              this.error = false;
-              this.notification = "Task created successfully, we'll email you when it is done";
-            }
+          this.$store.dispatch(TASK_REQUEST, 
+              { 
+                urls: this.clients.map(item => item.url), 
+                username: this.$store.state.user.profile.username
+              }
+            ).then(() => {
+              if (this.$store.state.creatorFinder.error) {
+                console.log('Error: ', this.$store.state.creatorFinder.error);
+                this.error = true;
+                this.notification = this.$store.state.creatorFinder.error;
+              }
+              else if (this.$store.state.creatorFinder.status === "success") {
+                this.error = false;
+                this.notification = "Task created successfully, we'll email you when it is done";
+              }
           });
         }
       }

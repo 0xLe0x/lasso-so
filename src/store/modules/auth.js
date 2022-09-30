@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { gql } from '@urql/vue'
 import client from '../../client';
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from "../actions/auth";
-import { USER_REQUEST } from "../actions/user";
+import { USER_REQUEST, USER_SUCCESS } from "../actions/user";
 
 export const USER_AUTH_TOKEN = "USER_AUTH_TOKEN"
 export const USER_AUTH_REFRESH_TOKEN = "USER_AUTH_REFRESH_TOKEN"
@@ -70,6 +70,9 @@ const actions = {
             localStorage.setItem(USER_AUTH_TOKEN, resp.data.tokenAuth.token)
             localStorage.setItem(USER_AUTH_REFRESH_TOKEN, resp.data.tokenAuth.refreshToken)
             commit(AUTH_SUCCESS, resp.data.tokenAuth);
+            commit(USER_SUCCESS, { 
+              username: resp.data.tokenAuth.payload.username, 
+              email: null, isVerified: null });
             //dispatch(USER_REQUEST, resp.data.tokenAuth.user);
           } else {
             commit(AUTH_ERROR, resp.error.graphQLErrors[0].message);

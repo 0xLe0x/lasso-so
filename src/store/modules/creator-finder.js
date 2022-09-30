@@ -4,8 +4,8 @@ import client from '../../client';
 import { TASK_SUCCESS, TASK_ERROR, TASK_REQUEST } from "../actions/creator-finder";
 
 const FIND_CREATORS = gql`
-  mutation ($urls: [String]!) {
-    createCreatorFinderTasks (urls: $urls) {
+  mutation ($urls: [String]!, $username: String!) {
+    createCreatorFinderTasks (urls: $urls, username: $username) {
       taskIds,
       success,
       errors
@@ -38,11 +38,12 @@ const mutations = {
 };
 
 const actions = {
-  [TASK_REQUEST]: ({ commit, dispatch }, urls) => {
+  [TASK_REQUEST]: ({ commit, dispatch }, input) => {
       commit(TASK_REQUEST);
       return client.mutation(FIND_CREATORS,
         { 
-          urls: urls
+          urls: input.urls,
+          username: input.username
         })
         .toPromise()
         .then(resp => {
