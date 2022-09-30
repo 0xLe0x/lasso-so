@@ -32,7 +32,8 @@
             <div class="pt-5 mt-6 border-t border-slate-200">
               <!-- Start process -->
               <div class="flex items-center justify-between mt-6">
-                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3">
+                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3"
+                  @click="findCreators">
                   Find creators
                 </button>
               </div>
@@ -52,6 +53,10 @@
 
 <script>
 import NotificationBox from '../../partials/utils/NotificationBox.vue';
+import { TASK_REQUEST } from '../../store/actions/creator-finder';
+
+// Import utilities
+import { isValidURL } from '../../utils/Utils'
 
 export default{
   name: 'ClientInputForm',
@@ -80,7 +85,40 @@ export default{
       this.clients.splice(index, 1)
     },
     findCreators() {
-      console.log('findCreators')
+      if (this.clients.length === 0) {
+        this.error = true;
+        this.notification = 'Please add at least one client';
+        return;
+      }
+      else if (this.clients.length > 10) {
+        this.error = true;
+        this.notification = 'Please remove some clients (max 10)';
+        return;
+      }
+      else {
+        const invalid_urls = this.clients.filter(item => isValidURL(item.url) === false);
+        console.log("invalid urls: ", invalid_urls, this.clients);
+        if (invalid_urls.length > 0) {
+          this.error = true;
+          this.notification = `Please include complete urls, e.g. https://example.com. 
+            Errors: ${invalid_urls.map(item => item.url).join(', ')}`;
+          return;
+        }
+        else {
+          console.log('Input urls ', this.clients.map(item => item.url));
+          this.$store.dispatch(TASK_REQUEST, this.clients.map(item => item.url)).then(() => {
+            if (this.$store.state.creatorFinder.error) {
+              console.log('Error: ', this.$store.state.creatorFinder.error);
+              this.error = true;
+              this.notification = this.$store.state.creatorFinder.error;
+            }
+            else if (this.$store.state.creatorFinder.status === "success") {
+              this.error = false;
+              this.notification = "Task created successfully, we'll email you when it is done";
+            }
+          });
+        }
+      }
     }
   },
 }
