@@ -47,7 +47,6 @@ const actions = {
         })
         .toPromise()
         .then(resp => {
-          console.log(resp);
           if (resp.data.createCreatorFinderTasks) {
             commit(TASK_SUCCESS);           
           } else {

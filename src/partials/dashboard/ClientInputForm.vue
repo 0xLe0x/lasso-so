@@ -101,8 +101,10 @@ export default{
         return;
       }
       else {
-        const invalid_urls = this.clients.filter(item => isValidURL(item.url) === false);
-        console.log("invalid urls: ", invalid_urls, this.clients);
+        const invalid_urls = this.clients.filter(item => (
+          isValidURL(item.url) === false || item.url === '' 
+          || (!item.url.startsWith("https://") && !item.url.startsWith("http://"))
+        ));
         if (invalid_urls.length > 0) {
           this.error = true;
           this.notification = `Please include complete urls, e.g. https://example.com. 
@@ -110,7 +112,6 @@ export default{
           return;
         }
         else {
-          console.log('Input urls ', this.clients.map(item => item.url));
           this.$store.dispatch(TASK_REQUEST, 
               { 
                 urls: this.clients.map(item => item.url), 
