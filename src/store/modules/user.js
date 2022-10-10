@@ -4,16 +4,31 @@ import client from '../../client';
 import { 
   USER_CREATE, USER_VERIFY, USER_REQUEST, 
   USER_ERROR, USER_SUCCESS, USER_RESET_PASSWORD,
-  USER_SEND_RESET_PASSWORD_EMAIL,
+  USER_SEND_RESET_PASSWORD_EMAIL, USER_LOGOUT
 } from '../actions/user';
-import { AUTH_ERROR, AUTH_LOGOUT, AUTH_REQUEST } from "../actions/auth";
+import { AUTH_LOGOUT } from "../actions/auth";
 
-const WHOAMI = gql`
-  query {
-    me {
-      username,
-      email,
-      isVerified
+export const USER_PROFILE = "USER_PROFILE"
+
+const LOGIN_USER = gql`
+  mutation ($username: String!, $password: String!) {
+    loginUser (username: $username, password: $password) {
+      user {
+        username
+        email
+        isVerified
+      }
+      success
+      errors
+    }
+  }
+`
+
+const LOGOUT_USER = gql`
+  mutation {
+    logoutUser {
+      success
+      errors
     }
   }
 `
@@ -72,7 +87,7 @@ const RESET_PASSWORD = gql`
 
 const state = { 
   status: "", 
-  profile: {},
+  profile: localStorage.getItem(USER_PROFILE) || {},
   error: null 
 };
 
@@ -81,17 +96,53 @@ const getters = {
   isProfileLoaded: state => !!state.profile.username
 };
 
+const mutations = {
+  [USER_REQUEST]: state => {
+    state.status = "loading";
+  },
+  [USER_SUCCESS]: (state, user) => {
+    state.status = "success";
+    state.profile = { username: user.username, email: user.email, is_verified: user.isVerified };
+    state.error = null;
+  },
+  [USER_ERROR]: (state, error) => {
+    state.status = "error";
+    state.error = error;
+  },
+  [USER_LOGOUT]: state => {
+    state.status = "";
+    state.profile = {};
+  }
+};
+
 const actions = {
-  [USER_REQUEST]: ({ commit, dispatch }) => {
-    commit(USER_REQUEST);
-    client.query(WHOAMI)
-      .toPromise()
+  [USER_REQUEST]: ({ commit, dispatch }, user) => {
+    commit(USER_REQUEST, {
+      username: user.username,
+      password: user.password
+    });
+    return client.mutation(LOGIN_USER, {
+      username: user.username,
+      password: user.password
+    }).toPromise()
       .then(resp => {
-        commit(USER_SUCCESS, resp.data.me);
+        localStorage.setItem(USER_PROFILE, resp.data.loginUser.user);
+        commit(USER_SUCCESS, resp.data.loginUser.user);
       })
       .catch(() => {
         commit(USER_ERROR);
+        localStorage.removeItem(USER_PROFILE);
         dispatch(AUTH_LOGOUT);
+      });
+  },
+  [USER_LOGOUT]: ({ commit, dispatch }) => {
+    commit(USER_LOGOUT);
+    return client.mutation(LOGOUT_USER).toPromise()
+      .then(resp => {
+        localStorage.removeItem(USER_PROFILE);
+      }).catch(() => {
+        commit(USER_ERROR);
+        localStorage.removeItem(USER_PROFILE);
       });
   },
   [USER_CREATE]: ({ commit, dispatch }, user) => {
@@ -111,7 +162,6 @@ const actions = {
       })      
       .catch(err => {
         commit(USER_ERROR, err);
-        commit(AUTH_ERROR, err);
         dispatch(AUTH_LOGOUT);
       });
   },
@@ -134,24 +184,6 @@ const actions = {
     })
       .toPromise().then(resp => {}).catch(() => {});
   },
-};
-
-const mutations = {
-  [USER_REQUEST]: state => {
-    state.status = "loading";
-  },
-  [USER_SUCCESS]: (state, user) => {
-    state.status = "success";
-    state.profile = { username: user.username, email: user.email, is_verified: user.isVerified };
-    state.error = null;
-  },
-  [USER_ERROR]: (state, error) => {
-    state.status = "error";
-    state.error = error;
-  },
-  [AUTH_LOGOUT]: state => {
-    state.profile = {};
-  }
 };
 
 export default {

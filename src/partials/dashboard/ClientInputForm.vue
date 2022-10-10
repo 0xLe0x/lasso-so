@@ -119,7 +119,6 @@ export default{
               }
             ).then(() => {
               if (this.$store.state.creatorFinder.error) {
-                console.log('Error: ', this.$store.state.creatorFinder.error);
                 this.error = true;
                 this.notification = this.$store.state.creatorFinder.error;
               }
