@@ -87,7 +87,7 @@ const RESET_PASSWORD = gql`
 
 const state = { 
   status: "", 
-  profile: localStorage.getItem(USER_PROFILE) || {},
+  profile: JSON.parse(localStorage.getItem(USER_PROFILE)) || {},
   error: null 
 };
 
@@ -102,7 +102,7 @@ const mutations = {
   },
   [USER_SUCCESS]: (state, user) => {
     state.status = "success";
-    state.profile = { username: user.username, email: user.email, is_verified: user.isVerified };
+    state.profile = user;
     state.error = null;
   },
   [USER_ERROR]: (state, error) => {
@@ -126,12 +126,14 @@ const actions = {
       password: user.password
     }).toPromise()
       .then(resp => {
-        localStorage.setItem(USER_PROFILE, resp.data.loginUser.user);
+        localStorage.setItem(USER_PROFILE, JSON.stringify(resp.data.loginUser.user));
+        console.log("set profile: ", resp.data.loginUser.user);
         commit(USER_SUCCESS, resp.data.loginUser.user);
       })
       .catch(() => {
         commit(USER_ERROR);
         localStorage.removeItem(USER_PROFILE);
+        console.log("rmeoved profile 1: ");
         dispatch(AUTH_LOGOUT);
       });
   },
@@ -140,9 +142,11 @@ const actions = {
     return client.mutation(LOGOUT_USER).toPromise()
       .then(resp => {
         localStorage.removeItem(USER_PROFILE);
+        console.log("rmeoved profile 2: ");
       }).catch(() => {
         commit(USER_ERROR);
         localStorage.removeItem(USER_PROFILE);
+        console.log("rmeoved profile 3: ");
       });
   },
   [USER_CREATE]: ({ commit, dispatch }, user) => {
