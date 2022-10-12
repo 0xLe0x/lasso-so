@@ -127,13 +127,11 @@ const actions = {
     }).toPromise()
       .then(resp => {
         localStorage.setItem(USER_PROFILE, JSON.stringify(resp.data.loginUser.user));
-        console.log("set profile: ", resp.data.loginUser.user);
         commit(USER_SUCCESS, resp.data.loginUser.user);
       })
       .catch(() => {
         commit(USER_ERROR);
         localStorage.removeItem(USER_PROFILE);
-        console.log("rmeoved profile 1: ");
         dispatch(AUTH_LOGOUT);
       });
   },
@@ -142,11 +140,9 @@ const actions = {
     return client.mutation(LOGOUT_USER).toPromise()
       .then(resp => {
         localStorage.removeItem(USER_PROFILE);
-        console.log("rmeoved profile 2: ");
       }).catch(() => {
         commit(USER_ERROR);
         localStorage.removeItem(USER_PROFILE);
-        console.log("rmeoved profile 3: ");
       });
   },
   [USER_CREATE]: ({ commit, dispatch }, user) => {
