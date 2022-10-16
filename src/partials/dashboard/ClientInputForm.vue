@@ -102,13 +102,11 @@ export default{
       }
       else {
         const invalid_urls = this.clients.filter(item => (
-          isValidURL(item.url) === false || item.url === '' 
-          || (!item.url.startsWith("https://") && !item.url.startsWith("http://"))
+          isValidURL(item.url) === false || item.url === ''
         ));
         if (invalid_urls.length > 0) {
           this.error = true;
-          this.notification = `Please include complete urls, e.g. https://example.com. 
-            Errors: ${invalid_urls.map(item => item.url).join(', ')}`;
+          this.notification = `Invalid url(s): ${invalid_urls.map(item => item.url).join(', ')}`;
           return;
         }
         else {
