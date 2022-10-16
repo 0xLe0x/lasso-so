@@ -23,8 +23,9 @@
 
             <!-- Add a client url -->
             <div>
-              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3 mt-4" 
-                @click="addClient">Add another client
+              <button class="btn w-9 h-9 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-md rounded-full ml-3 mt-4 inline-flex items-center"
+                @click="addClient">
+                <img src = "../../images/plus-sign.svg" alt="Add"/>
               </button>
             </div>
 
