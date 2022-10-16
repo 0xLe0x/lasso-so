@@ -56,7 +56,18 @@
                 ></VueRecaptcha>
 
                 <div class="flex items-center justify-between mt-6">
-                  <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/">Sign Up</button>
+                  <button v-if="loading" type="button"
+                      class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3"
+                      disabled="">
+                      <svg class="w-5 h-5 mr-3 ml-3 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none"
+                          viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                          </path>
+                      </svg>
+                  </button>
+                  <button v-else class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" to="/">Sign Up</button>
                 </div>
               </div>
             </form>
@@ -105,13 +116,16 @@ export default {
       error: null,
       siteKey: import.meta.env.VITE_GCP_RECAPTCHA_KEY,
       is_recaptcha_verified: false,
+      loading: false,
     }
   },
   methods: {
     signUp() {
+      this.loading = true
       if (!this.is_recaptcha_verified) {
         this.notification = 'Please verify that you are not a robot.'
         this.error = true
+        this.loading = false
         return
       }
       const { email, username, password } = this
@@ -119,9 +133,11 @@ export default {
         if (this.$store.state.user.error) {
           this.notification = this.$store.state.user.error
           this.error = true
+          this.loading = false
         } else {
           this.notification = 'Account verification email sent! Please check your inbox.'
           this.error = false
+          this.loading = false
         }
       }, error => {})
     },
