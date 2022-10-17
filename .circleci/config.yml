@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@3.1.3
-  node: circleci/node@5.0.3
 
 jobs:
   install:
@@ -10,8 +9,6 @@ jobs:
       - image: cimg/base:current-20.04
     steps:
       - checkout
-      - node/install:
-          node-version: 16.18.0
       - run:
           name: Install Docker Compose
           environment:
@@ -27,24 +24,30 @@ jobs:
             sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
               libnotify-dev libgconf-2-4 libnss3 libxss1 \
               libasound2 libxtst6 xauth xvfb
+      - run:
+        name: Install Node.js
+        environment:
+          NODE_VERSION: '16.18.0'
+          NVM_VERSION: '0.39.2'
+        command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v{NVM_VERSION}/install.sh | bash
+            source ~/.nvm/nvm.sh
+            nvm install ${NODE_VERSION}
+            nvm use ${NODE_VERSION}
+            node -v
+            npm -v
 
   test:
     docker:
       - image: cimg/base:current-20.04
     steps:
       - checkout
-      - node/install:
-          node-version: 16.18.0
       - setup_remote_docker:
           docker_layer_caching: true
       - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
-      - run: sudo npm install -g npm@latest
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install --production=false
       - run: 
           name: ECR login and get credentials
           command: |
@@ -52,6 +55,7 @@ jobs:
             aws ecr get-login-password --region $AWS_REGION | \
             docker login --username AWS --password-stdin \
             "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+      - run: npm -v
       - run: 
           name: Build test image
           command: |
