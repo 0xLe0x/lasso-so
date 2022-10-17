@@ -5,10 +5,8 @@ orbs:
 
 jobs:
   install:
-    environment:
-      NODE_VERSION: '16.18.0'
     docker:
-      - image: cimg/node:${NODE_VERSION}
+      - image: cimg/base:current-20.04
     steps:
       - checkout
       - run:
@@ -26,13 +24,10 @@ jobs:
             sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
               libnotify-dev libgconf-2-4 libnss3 libxss1 \
               libasound2 libxtst6 xauth xvfb  # Cypress
-      - run: npm -v
 
   test:
-    environment:
-      NODE_VERSION: '16.18.0'
     docker:
-      - image: cimg/node:${NODE_VERSION}
+      - image: cimg/base:current-20.04
     steps:
       - checkout
       - setup_remote_docker:
@@ -48,7 +43,6 @@ jobs:
             aws ecr get-login-password --region $AWS_REGION | \
             docker login --username AWS --password-stdin \
             "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
-      - run: npm -v
       - run: 
           name: Build test image
           command: |
@@ -57,6 +51,7 @@ jobs:
       - run: 
           name: Run test image and check health
           command: |
+            docker exec frontend pwd
             docker cp ./. frontend:/home/app
             docker-compose up -d
             docker run --network container:frontend \
