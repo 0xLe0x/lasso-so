@@ -6,6 +6,7 @@ orbs:
 
 jobs:
   install:
+    executor: node/default
     docker:
       - image: cimg/base:current-20.04
     steps:
