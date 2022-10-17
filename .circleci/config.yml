@@ -27,6 +27,7 @@ jobs:
             sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
               libnotify-dev libgconf-2-4 libnss3 libxss1 \
               libasound2 libxtst6 xauth xvfb
+      - run: sudo npm install -g npm@latest
 
   test:
     docker:
@@ -41,7 +42,7 @@ jobs:
           aws-region: AWS_REGION
       - node/install-packages:
           cache-path: ~/project/node_modules
-          override-ci-command: npm install
+          override-ci-command: npm install --production=false
       - run: 
           name: ECR login and get credentials
           command: |
