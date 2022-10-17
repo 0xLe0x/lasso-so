@@ -6,7 +6,6 @@ orbs:
 
 jobs:
   install:
-    executor: node/default
     docker:
       - image: cimg/base:current-20.04
     steps:
@@ -28,9 +27,9 @@ jobs:
             sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev \
               libnotify-dev libgconf-2-4 libnss3 libxss1 \
               libasound2 libxtst6 xauth xvfb
-      - run: sudo npm install -g npm@latest
 
   test:
+    executor: node/default
     docker:
       - image: cimg/base:current-20.04
     steps:
@@ -41,6 +40,7 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
+      - run: sudo npm install -g npm@latest
       - node/install-packages:
           cache-path: ~/project/node_modules
           override-ci-command: npm install --production=false
