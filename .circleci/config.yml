@@ -31,7 +31,7 @@ jobs:
             NODE_VERSION: '16.18.0'
             NVM_VERSION: '0.39.2'
           command: |
-              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v{NVM_VERSION}/install.sh | sh
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v{NVM_VERSION}/install.sh | bash
               source ~/.nvm/nvm.sh
               nvm install ${NODE_VERSION}
               nvm use ${NODE_VERSION}
