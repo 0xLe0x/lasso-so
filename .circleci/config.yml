@@ -29,11 +29,12 @@ jobs:
               libasound2 libxtst6 xauth xvfb
 
   test:
-    executor: node/default
     docker:
       - image: cimg/base:current-20.04
     steps:
       - checkout
+      - node/install:
+          node-version: 16.18.0
       - setup_remote_docker:
           docker_layer_caching: true
       - aws-cli/setup:
