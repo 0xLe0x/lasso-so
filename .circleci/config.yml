@@ -3,11 +3,10 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@3.1.3
 
-environment:
-  NODE_VERSION: '16.18.0'
-
 jobs:
   install:
+    environment:
+      NODE_VERSION: '16.18.0'
     docker:
       - image: cimg/node:${NODE_VERSION}
     steps:
@@ -30,6 +29,8 @@ jobs:
       - run: npm -v
 
   test:
+    environment:
+      NODE_VERSION: '16.18.0'
     docker:
       - image: cimg/node:${NODE_VERSION}
     steps:
