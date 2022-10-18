@@ -1,0 +1,70 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@3.1.3
+
+jobs:
+  install:
+    docker:
+      - image: cimg/base:current-20.04
+    steps:
+      - checkout
+      - run:
+          name: Install Docker Compose
+          environment:
+            COMPOSE_VERSION: '2.4.0'
+          command: |
+            curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+
+  test:
+    docker:
+      - image: cimg/base:current-20.04
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+      - run: 
+          name: ECR login and get credentials
+          command: |
+            ACCOUNT_ID=$(aws sts get-caller-identity | jq -r ".Account")
+            aws ecr get-login-password --region $AWS_REGION | \
+            docker login --username AWS --password-stdin \
+            "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+      - run: 
+          name: Build test image
+          command: |
+            rm docker-compose.yml; mv docker-compose.test.yml docker-compose.yml
+            docker-compose build
+      - run: 
+          name: Run test image and check health
+          command: |
+            docker-compose up -d
+            docker cp ./. frontend:/home/app
+            docker-compose restart frontend
+            docker ps
+            docker logs frontend
+            FRONTEND_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' frontend)
+            echo $FRONTEND_IP
+            docker run --network container:frontend \
+              appropriate/curl --retry 10 --retry-delay 5 \
+              --retry-connrefused http://${FRONTEND_IP}:8080
+      - run: 
+          name: Run tests
+          command: |
+            echo Running tests...
+            docker-compose exec frontend npm run cy:run
+            docker-compose exec frontend npm run test -- --run
+
+workflows:
+  build_and_test:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
