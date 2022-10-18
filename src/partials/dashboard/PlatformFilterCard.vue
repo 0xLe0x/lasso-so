@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col col-span-full sm:col-span-6 bg-white shadow-lg rounded-sm border border-slate-200">
+  <div class="flex flex-col col-span-full sm:col-span-5 bg-white shadow-lg rounded-sm border border-slate-200">
     <header class="px-5 py-4 border-b border-slate-100 flex items-center">
       <h2 class="font-semibold text-slate-800">Real Time Value</h2>
       <Tooltip class="ml-2">
@@ -21,7 +21,7 @@ import RealtimeChart from '../../charts/RealtimeChart.vue'
 import { tailwindConfig, hexToRGB } from '../../utils/Utils'
 
 export default {
-  name: 'DashboardCard05',
+  name: 'PlatformFilterCard',
   components: {
     Tooltip,
     RealtimeChart,

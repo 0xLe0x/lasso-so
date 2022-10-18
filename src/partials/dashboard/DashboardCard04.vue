@@ -17,7 +17,7 @@ import BarChart from '../../charts/BarChart01.vue'
 import { tailwindConfig } from '../../utils/Utils'
 
 export default {
-  name: 'DashboardCard03',
+  name: 'DashboardCard04',
   components: {
     BarChart,
   },
