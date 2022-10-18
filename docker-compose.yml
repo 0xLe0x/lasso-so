@@ -5,6 +5,8 @@ services:
     build: .
     command: "npm run serve"
     container_name: frontend
+    volumes:
+      - .:/home/app:cached
     ports:
       - "8080"
     expose:
@@ -15,6 +17,8 @@ services:
       # All vite env variables must be prefixed with VITE_
       - VITE_API_BACKEND_URL=https://local-api.lasso.so/graphql/
       - VITE_NODE_ENV=local
+      # Enable hot reloading
+      - CHOKIDAR_USEPOLLING=true
 
 networks:
   default:
