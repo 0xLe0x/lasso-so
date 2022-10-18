@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col col-span-full sm:col-span-7 bg-white shadow-lg rounded-sm border border-slate-200">
+  <div class="flex grow flex-col col-span-full bg-white rounded-sm">
     <div class="px-10 pb-4 pt-8">
       <h1 class="text-2xl font-semibold text-slate-800 mb-2">Add website for analysis</h1>
       <h2 class="text-lg text-slate-400 mb-6">Find creators whose content aligns with a brand's website content</h2>

@@ -4,9 +4,9 @@
     <div class="relative flex">
 
       <!-- Content -->
-      <div class="grid grid-cols-12 gap-6">
-        <WebsiteInputCard />
+      <div class="grid grid-cols-12 gap-6 w-full">
         <PlatformFilterCard />
+        <WebsiteInputCard />
       </div>
 
     </div>
