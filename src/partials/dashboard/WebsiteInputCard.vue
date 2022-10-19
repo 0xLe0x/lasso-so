@@ -91,9 +91,9 @@ export default {
     },
     findCreators() {
       this.loading = true;
-      if (this.clients.length === 0) {
+      if (this.clients.length === 0 || this.$store.state.creatorFinder.platformsSelected.length === 0) {
         this.error = true;
-        this.notification = 'Please add at least one client';
+        this.notification = 'Please add at least one client and one platform';
         this.loading = false;
         return;
       }
@@ -114,7 +114,6 @@ export default {
           isValidURL(item.url) === false || 
           item.url === ''
         ));
-        console.log(invalid_urls);
         if (invalid_urls.length > 0) {
           this.error = true;
           this.notification = `Invalid url(s): ${invalid_urls.map(item => item.url).join(', ')}`;
@@ -125,7 +124,7 @@ export default {
           this.$store.dispatch(TASK_REQUEST, 
               { 
                 urls: this.clients.map(item => item.url), 
-                username: this.$store.state.user.profile.username
+                platforms: this.$store.state.creatorFinder.platformsSelected,
               }
             ).then(() => {
               if (this.$store.state.creatorFinder.error) {
