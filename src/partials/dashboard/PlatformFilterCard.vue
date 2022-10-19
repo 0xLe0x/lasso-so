@@ -7,8 +7,8 @@
       <div class="grow my-4">
         <div class="flex flex-col h-full">
           <!-- Card content -->
-          <div class="grid grid-flow-col auto-rows-min gap-4 grow">
-            <ul class="space-y-1 text-sm text-slate-800 mt-3 mb-4" v-for="platform in platforms" :key="platform">
+          <div class="grid grid-flow-rows grid-cols-12 gap-4 grow">
+            <ul class="col-span-12 md:col-span-4 lg:col-span-3 space-y-1 text-sm text-slate-800 mt-3 mb-4" v-for="platform in platforms" :key="platform">
               <input :id="platform" :value="platform" type="checkbox" v-model="checkedPlatforms" class="ml-1 mr-3 w-4 h-4 text-indigo-500 bg-white rounded border-slate-300 focus:ring-indigo-300"/>
               <label class="text-sm font-medium text-slate-800" :for="platform"><span>{{ platform }} </span></label>
             </ul>
