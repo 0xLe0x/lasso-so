@@ -97,6 +97,7 @@ const addAuthToOperation = ({ authState, operation }) => {
           ...fetchOptions.headers,
           "Authorization": `JWT ${authState.token}`,
         },
+        credentials: 'include',
       },
     },
   );
