@@ -105,7 +105,7 @@ export default {
       }
       else if (!this.$store.state.user.profile.username) {
         this.error = true;
-        this.notification = 'Please try logging again to continue';
+        this.notification = 'Please try logging in again to continue';
         this.loading = false;
         return;
       }
