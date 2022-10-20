@@ -41,7 +41,7 @@
                   <input required id="email" v-model="email" class="form-input w-full" type="email" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium mb-1" for="username">User Name <span class="text-rose-500">*</span></label>
+                  <label class="block text-sm font-medium mb-1" for="username">Username <span class="text-rose-500">*</span></label>
                   <input required id="username" v-model="username" class="form-input w-full" type="text" />
                 </div>
                 <div>
