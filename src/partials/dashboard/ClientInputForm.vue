@@ -6,6 +6,7 @@
       <!-- Content -->
       <div class="grid grid-cols-12 gap-6 w-full">
         <PlatformFilterCard />
+        <LocationFilterCard />
         <WebsiteInputCard />
       </div>
 
@@ -16,14 +17,17 @@
 
 
 <script>
-import WebsiteInputCard from './WebsiteInputCard.vue';
+import LocationFilterCard from './LocationFilterCard.vue';
 import PlatformFilterCard from './PlatformFilterCard.vue';
+import WebsiteInputCard from './WebsiteInputCard.vue';
+
 
 export default{
   name: 'ClientInputForm',
   components: {
-    WebsiteInputCard,
+    LocationFilterCard,
     PlatformFilterCard,
+    WebsiteInputCard,
   },
 }
 </script>
