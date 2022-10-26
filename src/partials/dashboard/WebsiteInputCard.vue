@@ -125,6 +125,7 @@ export default {
               { 
                 urls: this.clients.map(item => item.url), 
                 platforms: this.$store.state.creatorFinder.platformsSelected,
+                locations: this.$store.state.creatorFinder.locationsSelected,
               }
             ).then(() => {
               if (this.$store.state.creatorFinder.error) {
