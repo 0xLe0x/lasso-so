@@ -18,7 +18,7 @@
           <div class="flex grow flex-col col-span-full bg-white rounded-sm">
             <div class="px-10 pb-4 pt-8">
               <h1 class="text-2xl font-semibold text-slate-800 mb-2">Email</h1>
-              <div class="flex items-center justify-between mt-6">
+              <div>
                 <div v-if="!email_connected" :key="componentKey">
                   <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white"
                     @click="connectGmail">
@@ -26,6 +26,9 @@
                   </button>
                   <!-- Notification Msg -->
                   <NotificationBox v-if="notification" :message="notification" :is-error="error" />
+                </div>
+                <div v-else>
+                  <EmailForm />
                 </div>
               </div>
             </div>
@@ -38,10 +41,11 @@
 
 <script>
 import { ref } from "vue";
-import Sidebar from "../partials/Sidebar.vue";
+import store from "../store/index";
+import EmailForm from "../partials/email/EmailForm.vue";
 import Header from "../partials/Header.vue";
 import NotificationBox from '../partials/utils/NotificationBox.vue'
-import store from "../store/index";
+import Sidebar from "../partials/Sidebar.vue";
 import { EMAIL_CONNECT_REQUEST, GET_EMAIL_CONNECT_STATUS_REQUEST } from '../store/actions/email';
 
 import { getGoogleUrl } from "../utils/Google";
@@ -49,6 +53,7 @@ import { getGoogleUrl } from "../utils/Google";
 export default {
   name: "Email",
   components: {
+    EmailForm,
     Header,
     NotificationBox,
     Sidebar,
