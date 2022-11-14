@@ -18,7 +18,7 @@
                 </div>
                 <div>
                   <label class="block text-sm font-medium mb-1" for="message">Message</label>
-                  <textarea class="form-input w-full" required name="message" id="message" placeholder="Your message..." />
+                  <textarea class="form-input w-full" required v-model="message" name="message" id="message" placeholder="Your message..." />
                 </div>
               </div>
               <div class="flex items-center justify-between mt-6">
@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import { UPDATE_EMAIL_COPY_REQUEST } from '../../store/actions/email';
+import store from "../../store/index";
 import NotificationBox from '../utils/NotificationBox.vue'
 
 
@@ -70,7 +72,21 @@ export default {
   },
   methods: {
     setEmailCopy() {
-      console.log("setting email copy")
+      this.loading = true
+      this.$store.dispatch(UPDATE_EMAIL_COPY_REQUEST, {
+        subject: this.subject,
+        message: this.message,
+      }).then(() => {
+        if (store.getters.emailTaskComplete) {
+          this.notification = "Email copy updated successfully"
+          this.error = false
+          this.loading = false
+        } else {
+          this.notification = err
+          this.error = true
+          this.loading = false
+        }
+      })
     }
   }
 }

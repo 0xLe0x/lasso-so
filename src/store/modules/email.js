@@ -2,14 +2,22 @@ import _ from 'lodash';
 import { gql } from '@urql/vue'
 import client from '../../client';
 import { 
-  EMAIL_CONNECT_SUCCESS, EMAIL_CONNECT_ERROR, EMAIL_CONNECT_REQUEST,
-  GET_EMAIL_CONNECT_STATUS_REQUEST, GET_EMAIL_CONNECT_STATUS_SUCCESS, 
-  GET_EMAIL_CONNECT_STATUS_ERROR
+  EMAIL_SUCCESS, EMAIL_ERROR, EMAIL_CONNECT_REQUEST,
+  UPDATE_EMAIL_COPY_REQUEST, GET_EMAIL_CONNECT_STATUS_REQUEST
 } from "../actions/email";
 
 const EMAIL_AUTH_REQUEST = gql`
   mutation ($auth_code: String!) {
     createEmailConnection(authCode: $auth_code) {
+      success
+      errors
+    }
+  }
+`
+
+const EMAIL_COPY_UPDATE_REQUEST = gql`
+  mutation ($subject: String!, $message: String!) {
+    updateEmailCopy(subject: $subject, message: $message) {
       success
       errors
     }
@@ -30,34 +38,28 @@ const state = {
 
 const getters = {
   isEmailConnected: state => state.connected,
+  emailTaskComplete: state => state.status == "success" ? true : false,
 };
 
 const mutations = {
-  [EMAIL_CONNECT_REQUEST]: state => {
-    state.status = "loading";
-  },
-  [EMAIL_CONNECT_SUCCESS]: state => {
+  [EMAIL_SUCCESS]: state => {
     state.status = "success";
     state.connected = true;
     state.error = null;
   },
-  [EMAIL_CONNECT_ERROR]: (state, error) => {
+  [EMAIL_ERROR]: (state, error) => {
     state.status = "error";
     state.connected = false;
     state.error = error;
+  },
+  [EMAIL_CONNECT_REQUEST]: state => {
+    state.status = "loading";
   },
   [GET_EMAIL_CONNECT_STATUS_REQUEST]: state => {
     state.status = "loading";
   },
-  [GET_EMAIL_CONNECT_STATUS_SUCCESS]: (state, is_connected) => {
-    state.status = "success";
-    state.connected = is_connected;
-    state.error = null;
-  },
-  [GET_EMAIL_CONNECT_STATUS_ERROR]: (state, error) => {
-    state.status = "error";
-    state.connected = false;
-    state.error = error;
+  [UPDATE_EMAIL_COPY_REQUEST]: state => {
+    state.status = "loading";
   },
 };
 
@@ -72,7 +74,7 @@ const actions = {
         .then(resp => {
           var data = resp.data.createEmailConnection;
           if (data && data.success) {
-            commit(EMAIL_CONNECT_SUCCESS);
+            commit(EMAIL_SUCCESS);
           } else {
             var err;
             if (data) {
@@ -80,11 +82,11 @@ const actions = {
             } else {
               err = resp.error;
             }
-            commit(EMAIL_CONNECT_ERROR, err);
+            commit(EMAIL_ERROR, err);
           }
         })
         .catch(err => {
-          commit(EMAIL_CONNECT_ERROR, err);
+          commit(EMAIL_ERROR, err);
         });
   },
   [GET_EMAIL_CONNECT_STATUS_REQUEST]: ({ commit, dispatch }) => {
@@ -92,16 +94,40 @@ const actions = {
     return client.query(EMAIL_STATUS_REQUEST).toPromise()
       .then(resp => {
         if (resp.data.isEmailConnected) {
-          commit(GET_EMAIL_CONNECT_STATUS_SUCCESS, resp.data.isEmailConnected);
+          commit(EMAIL_SUCCESS, resp.data.isEmailConnected);
         } else {
-          var err = resp.error;
-          commit(GET_EMAIL_CONNECT_STATUS_ERROR, err);
+          var err;
+          if (data) {
+            err = data.errors[0] ? data.errors : resp.error;
+          } else {
+            err = resp.error;
+          }
+          commit(EMAIL_ERROR, err);
         }
       })
       .catch(err => {
-        commit(GET_EMAIL_CONNECT_STATUS_ERROR, err);
+        commit(EMAIL_ERROR, err);
       });
-}
+  },
+  [UPDATE_EMAIL_COPY_REQUEST]: ({ commit, dispatch }, copy) => {
+    commit(UPDATE_EMAIL_COPY_REQUEST);
+    return client.mutation(EMAIL_COPY_UPDATE_REQUEST, { 
+        subject: copy.subject,
+        message: copy.message 
+      }).toPromise().then(resp => {
+        var data = resp.data.updateEmailCopy;
+        if (data && data.success) {
+          commit(EMAIL_SUCCESS, data.success);
+        } else {
+          var err = resp.error;
+          commit(EMAIL_ERROR, err);
+        }
+      })
+      .catch(err => {
+        commit(EMAIL_ERROR, err);
+      });
+  },
+
 };
 
 export default {
