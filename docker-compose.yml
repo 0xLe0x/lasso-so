@@ -17,6 +17,7 @@ services:
       # All vite env variables must be prefixed with VITE_
       - VITE_API_BACKEND_URL=https://local-api.lasso.so/graphql/
       - VITE_NODE_ENV=local
+      - VITE_GOOGLE_OAUTH_REDIRECT_URI=https://local-app.lasso.so/email
       # Enable hot reloading
       - CHOKIDAR_USEPOLLING=true
 

@@ -20,7 +20,7 @@ Sentry.init({
     }),
   ],
   tracesSampleRate: 1.0,
-  logErrors: true, // log errors to console
+  logErrors: true,
   environment: import.meta.env.VITE_NODE_ENV,
 });
 

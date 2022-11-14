@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "./store/index";
 import Activate from "./pages/Activate.vue";
-import Dashboard from "./pages/Dashboard.vue";
+import Search from "./pages/Search.vue";
+import Home from "./pages/Home.vue";
+import Qualify from "./pages/Qualify.vue";
+import Email from "./pages/Email.vue";
 import PageNotFound from "./pages/utility/PageNotFound.vue";
 import Signin from "./pages/Signin.vue";
 import Signup from "./pages/Signup.vue";
@@ -31,7 +34,22 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      component: Dashboard,
+      component: Home,
+      beforeEnter: ifAuthenticated,
+    },
+    {
+      path: "/search",
+      component: Search,
+      beforeEnter: ifAuthenticated,
+    },
+    {
+      path: "/qualify",
+      component: Qualify,
+      beforeEnter: ifAuthenticated,
+    },
+    {
+      path: "/email",
+      component: Email,
       beforeEnter: ifAuthenticated,
     },
     {

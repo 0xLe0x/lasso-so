@@ -11,7 +11,9 @@ export default defineConfig({
   define: {
     "process.env": process.env,
   },
-  plugins: [vue()],
+  plugins: [
+    vue(),
+  ],
   resolve: {
     alias: [
       {
@@ -43,6 +45,5 @@ export default defineConfig({
     },
   },
   test: {
-
   },
 });
