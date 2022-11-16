@@ -78,7 +78,7 @@ const actions = {
           } else {
             var err;
             if (data) {
-              err = data.errors[0] ? data.errors : resp.error;
+              err = data.errors ? data.errors[0] : resp.error;
             } else {
               err = resp.error;
             }
@@ -98,7 +98,7 @@ const actions = {
         } else {
           var err;
           if (data) {
-            err = data.errors[0] ? data.errors : resp.error;
+            err = data.errors ? data.errors[0] : resp.error;
           } else {
             err = resp.error;
           }

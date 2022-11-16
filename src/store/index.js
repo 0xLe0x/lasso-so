@@ -3,6 +3,7 @@ import auth from "./modules/auth";
 import creatorFinder from "./modules/creator-finder";
 import email from "./modules/email";
 import user from "./modules/user";
+import qualifySettings from "./modules/qualify-settings";
 
 
 const store = new createStore({
@@ -10,7 +11,8 @@ const store = new createStore({
     auth,
     creatorFinder,
     email,
-    user
+    user,
+    qualifySettings,
   },
 });
 

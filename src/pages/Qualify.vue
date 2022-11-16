@@ -18,6 +18,7 @@
           <div class="flex grow flex-col col-span-full bg-white rounded-sm">
             <div class="px-10 pb-4 pt-8">
               <h1 class="text-2xl font-semibold text-slate-800 mb-2">Qualify</h1>
+              <SettingsForm />
             </div>
           </div>
         </div>
@@ -28,14 +29,17 @@
 
 <script>
 import { ref } from "vue";
-import Sidebar from "../partials/Sidebar.vue";
 import Header from "../partials/Header.vue";
+import Sidebar from "../partials/Sidebar.vue";
+import SettingsForm from "../partials/qualify/SettingsForm.vue";
+
 
 export default {
   name: "Qualify",
   components: {
-    Sidebar,
     Header,
+    Sidebar,
+    SettingsForm,
   },
   setup() {
     const sidebarOpen = ref(false);
