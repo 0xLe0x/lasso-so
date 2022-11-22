@@ -13,6 +13,10 @@
             <form @submit.prevent="updateSettings">
               <div class="w-4/5 md:w-1/2 space-y-4">
                 <div>
+                  <label class="block text-sm font-medium mb-1" for="num_followers">Minimum number of followers</label>
+                  <input required id="num_followers" type="number" v-model.number="num_followers" min="1" class="form-input w-full" />
+                </div>
+                <div>
                   <label class="block text-sm font-medium mb-1" for="num_views">Median number of views</label>
                   <input required id="num_views" type="number" v-model.number="num_views" min="1" class="form-input w-full" />
                 </div>
@@ -69,6 +73,7 @@ export default {
     return {
       num_views: null,
       num_posts: null,
+      num_followers: null,
       categories: [],
       locations: [],
       notification: null,
@@ -81,6 +86,7 @@ export default {
       this.$store.dispatch(SETTINGS_GET).then(() => {
         this.num_posts = store.getters.numPostsToAnalyze
         this.num_views = store.getters.medianNumViews
+        this.num_followers = store.getters.numFollowers
         this.categories = store.getters.categories
         this.locations = store.getters.locations
       })
@@ -94,6 +100,7 @@ export default {
       this.$store.dispatch(SETTINGS_UPDATE, {
         num_posts_to_analyze: this.num_posts,
         median_num_views: this.num_views,
+        num_followers: this.num_followers,
         categories: this.categories,
         locations: this.locations,
       }).then(() => {

@@ -9,11 +9,13 @@ import {
 const SETTINGS_UPDATE_MUTATION = gql`
   mutation (
     $num_posts_to_analyze: Int!, $median_num_views: Int!,
-    $categories: [String!]!, $locations: [String!]!,
+    $num_followers: Int!, $categories: [String!]!, 
+    $locations: [String!]!,
     ) {
     updateQualifySettings(
         numPastPostsToAnalyze: $num_posts_to_analyze,
         medianNumViews: $median_num_views,
+        followers: $num_followers,
         categories: $categories,
         locations: $locations,
     ){
@@ -22,6 +24,7 @@ const SETTINGS_UPDATE_MUTATION = gql`
       qualifySettings {
         numPastPostsToAnalyze,
         medianNumViews,
+        followers,
         categories,
         locations,
         createdAt,
@@ -36,6 +39,7 @@ const SETTINGS_GET_QUERY = gql`
     getQualifySettings{
       numPastPostsToAnalyze,
       medianNumViews,
+      followers,
       categories,
       locations,
       createdAt,
@@ -55,6 +59,7 @@ const getters = {
   settings: state => state.settings,
   numPostsToAnalyze: state => !!state.settings ? state.settings.numPastPostsToAnalyze : null,
   medianNumViews: state => !!state.settings ? state.settings.medianNumViews : null,
+  numFollowers: state => !!state.settings ? state.settings.followers : null,
   categories: state => !!state.settings ? state.settings.categories : null,
   locations: state => !!state.settings ? state.settings.locations : null,
   settingsTaskComplete: state => state.status === "success",
@@ -87,6 +92,7 @@ const actions = {
         { 
           num_posts_to_analyze: settings.num_posts_to_analyze,
           median_num_views: settings.median_num_views,
+          num_followers: settings.num_followers,
           categories: settings.categories,
           locations: settings.locations,
         })
