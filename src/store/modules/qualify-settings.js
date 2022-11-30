@@ -14,12 +14,13 @@ const SETTINGS_UPDATE_MUTATION = gql`
     $platform: String!
     ) {
     updateQualifySettings(
-        numPastPostsToAnalyze: $num_posts_to_analyze,
+        categories: $categories,
+        followers: $num_followers,
+        locations: $locations,
         medianNumViews: $median_num_views,
         medianNumLikes: $median_num_likes,
-        followers: $num_followers,
-        categories: $categories,
-        locations: $locations,
+        numPastPostsToAnalyze: $num_posts_to_analyze,
+        platform: $platform,
     ){
       success
       errors
@@ -97,12 +98,13 @@ const actions = {
       commit(SETTINGS_UPDATE);
       return client.mutation(SETTINGS_UPDATE_MUTATION,
         { 
-          num_posts_to_analyze: settings.num_posts_to_analyze,
+          categories: settings.categories,
+          locations: settings.locations,
           median_num_views: settings.median_num_views,
           median_num_likes: settings.median_num_likes,
           num_followers: settings.num_followers,
-          categories: settings.categories,
-          locations: settings.locations,
+          num_posts_to_analyze: settings.num_posts_to_analyze,
+          platform: settings.platform,
         })
         .toPromise()
         .then(resp => {

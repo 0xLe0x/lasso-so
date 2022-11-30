@@ -113,12 +113,13 @@ export default {
     updateSettings() {
       this.loading = true
       this.$store.dispatch(SETTINGS_UPDATE, {
-        num_followers: this.num_followers,
-        num_posts_to_analyze: this.num_posts,
-        median_num_views: this.num_views,
-        median_num_likes: this.num_likes,
         categories: this.categories,
         locations: this.locations,
+        median_num_likes: this.num_likes,
+        median_num_views: this.num_views,
+        num_followers: this.num_followers,
+        num_posts_to_analyze: this.num_posts,
+        platform: this.selected,
       }).then(() => {
         if (store.getters.settingsTaskComplete) {
           this.notification = "Settings updated successfully"
