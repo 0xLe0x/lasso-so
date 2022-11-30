@@ -5,6 +5,8 @@ import router from './router'
 import client from './client';
 import store from "./store/index";
 import App from './App.vue'
+import PrimeVue from 'primevue/config';
+import 'primeicons/primeicons.css';
 
 import './css/style.css'
 
@@ -27,4 +29,5 @@ Sentry.init({
 app.use(router)
 app.use(client) 
 app.use(store)
+app.use(PrimeVue)
 app.mount('#app')
