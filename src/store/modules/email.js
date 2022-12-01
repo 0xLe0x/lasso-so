@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { gql } from '@urql/vue'
+import * as Sentry from "@sentry/vue";
 import client from '../../client';
 import { 
   EMAIL_SUCCESS, EMAIL_ERROR, EMAIL_CONNECT_REQUEST,
@@ -83,6 +84,7 @@ const actions = {
               err = resp.error;
             }
             commit(EMAIL_ERROR, err);
+            Sentry.captureException(err);
           }
         })
         .catch(err => {
@@ -103,6 +105,7 @@ const actions = {
             err = resp.error;
           }
           commit(EMAIL_ERROR, err);
+          Sentry.captureException(err);
         }
       })
       .catch(err => {
@@ -121,6 +124,7 @@ const actions = {
         } else {
           var err = resp.error;
           commit(EMAIL_ERROR, err);
+          Sentry.captureException(err);
         }
       })
       .catch(err => {

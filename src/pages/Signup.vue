@@ -128,8 +128,8 @@ export default {
         this.loading = false
         return
       }
-      if (!(this.username === this.username.toLowerCase())) {
-        this.notification = 'Username must be lowercase.'
+      if (!!!/^[a-z0-9_\.]+$/.exec(this.username)) {
+        this.notification = 'Username must be lowercase and alphanumeric.'
         this.error = true
         this.loading = false
         return
