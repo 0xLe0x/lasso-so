@@ -1,10 +1,13 @@
 # Frontend
 
-## Project setup
+### Project setup
 ```
 npm install
 docker-compose up --build
 ```
+Run the proxy
+Repo: lasso-so/proxy see README.md for setup
+Check: https://local-app.lasso.so
 
 ### Compiles and hot-reloads for development
 ```
