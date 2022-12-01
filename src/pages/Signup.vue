@@ -128,6 +128,12 @@ export default {
         this.loading = false
         return
       }
+      if (!(this.username === this.username.toLowerCase())) {
+        this.notification = 'Username must be lowercase.'
+        this.error = true
+        this.loading = false
+        return
+      }
       const { email, username, password } = this
       this.$store.dispatch(USER_CREATE, { email, username, password }).then(resp => {
         if (this.$store.state.user.error) {
