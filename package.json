@@ -1,0 +1,43 @@
+{
+  "name": "lasso-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 8080",
+    "build": "next build",
+    "start": "next start -p 8080",
+    "lint": "eslint .",
+    "fmt_lint": "eslint --fix .",
+    "codegen": "graphql-codegen"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.1",
+    "@types/node": "18.11.10",
+    "@types/react": "18.0.26",
+    "@types/react-dom": "18.0.9",
+    "classnames": "^2.3.2",
+    "eslint": "8.28.0",
+    "eslint-config-next": "13.0.6",
+    "graphql": "^16.6.0",
+    "next": "13.0.6",
+    "prettier": "^2.8.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-google-recaptcha": "^2.1.0",
+    "react-use-cookie": "^1.4.0",
+    "typescript": "^4.9.3"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.15.0",
+    "@graphql-codegen/client-preset": "^1.2.1",
+    "@tailwindcss/forms": "^0.5.3",
+    "@types/cookies": "^0.7.7",
+    "@types/graphql": "^14.5.0",
+    "@types/react-google-recaptcha": "^2.1.5",
+    "autoprefixer": "^10.4.13",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "postcss": "^8.4.19",
+    "tailwindcss": "^3.2.4"
+  }
+}
